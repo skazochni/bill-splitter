@@ -585,5 +585,132 @@
       "total": 0,
       "excludedCount": 1
     }
+  },
+  "equal_three_remainder": {
+    "input": {
+      "version": 1,
+      "mode": "equal",
+      "currency": "RUB",
+      "people": [
+        {
+          "id": "p1",
+          "name": "А"
+        },
+        {
+          "id": "p2",
+          "name": "Б"
+        },
+        {
+          "id": "p3",
+          "name": "В"
+        }
+      ],
+      "items": [],
+      "taxPct": 0,
+      "tipPct": 0,
+      "discountPct": 0,
+      "equalTotal": 1000,
+      "equalPayerId": "p1",
+      "lastItemPayerId": "p1"
+    },
+    "result": {
+      "mode": "equal",
+      "people": [
+        {
+          "id": "p1",
+          "name": "А",
+          "subtotal": 334,
+          "discount": 0,
+          "tax": 0,
+          "tip": 0,
+          "owed": 334,
+          "paid": 1000,
+          "balance": 666
+        },
+        {
+          "id": "p2",
+          "name": "Б",
+          "subtotal": 333,
+          "discount": 0,
+          "tax": 0,
+          "tip": 0,
+          "owed": 333,
+          "paid": 0,
+          "balance": -333
+        },
+        {
+          "id": "p3",
+          "name": "В",
+          "subtotal": 333,
+          "discount": 0,
+          "tax": 0,
+          "tip": 0,
+          "owed": 333,
+          "paid": 0,
+          "balance": -333
+        }
+      ],
+      "subtotal": 1000,
+      "tax": 0,
+      "tip": 0,
+      "total": 1000,
+      "excludedCount": 0
+    }
+  },
+  "equal_jpy": {
+    "input": {
+      "version": 1,
+      "mode": "equal",
+      "currency": "JPY",
+      "people": [
+        {
+          "id": "p1",
+          "name": "Анна"
+        },
+        {
+          "id": "p2",
+          "name": "Борис"
+        }
+      ],
+      "items": [],
+      "taxPct": 0,
+      "tipPct": 0,
+      "discountPct": 0,
+      "equalTotal": 1001,
+      "equalPayerId": "p1",
+      "lastItemPayerId": "p1"
+    },
+    "result": {
+      "mode": "equal",
+      "people": [
+        {
+          "id": "p1",
+          "name": "Анна",
+          "subtotal": 501,
+          "discount": 0,
+          "tax": 0,
+          "tip": 0,
+          "owed": 501,
+          "paid": 1001,
+          "balance": 500
+        },
+        {
+          "id": "p2",
+          "name": "Борис",
+          "subtotal": 500,
+          "discount": 0,
+          "tax": 0,
+          "tip": 0,
+          "owed": 500,
+          "paid": 0,
+          "balance": -500
+        }
+      ],
+      "subtotal": 1001,
+      "tax": 0,
+      "tip": 0,
+      "total": 1001,
+      "excludedCount": 0
+    }
   }
 }
