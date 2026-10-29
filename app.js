@@ -1,5 +1,9 @@
 (() => {
   'use strict';
+  if (typeof window.BillCalc === 'undefined') {
+    console.error('calc.js не загружен: модуль расчётов (BillCalc) недоступен. Приложение не инициализировано.');
+    return;
+  }
 
   const STORAGE_KEY = 'billSplitter.v1';
   const HISTORY_KEY = 'billSplitter.history.v1';
