@@ -614,6 +614,11 @@
       : '<option value="">Нет участников</option>';
     el.equalPayer.disabled = state.people.length === 0;
     el.equalPayerHint.hidden = state.people.length > 0;
+    if (state.people.length === 0) {
+      el.equalPayer.setAttribute('aria-describedby', 'equalPayerHint');
+    } else {
+      el.equalPayer.removeAttribute('aria-describedby');
+    }
     updateEqualNote();
   }
   function summaryPersonMarkup(person, mode) {
