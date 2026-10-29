@@ -850,8 +850,8 @@
     el.tipInput.value = percentToInput(state.tipPct);
     const c = currentCurrency();
     el.itemAmount.placeholder = c.digits ? '0,' + '0'.repeat(c.digits) : '0';
-    el.itemSubmit.disabled = state.people.length === 0;
-    el.itemSubmit.title = state.people.length === 0 ? 'Сначала добавьте участников' : '';
+    el.itemSubmit.disabled = false;
+    el.itemSubmit.title = '';
     updateSummary();
     renderHistory();
     if (!storageOk) el.storageNotice.hidden = false;
@@ -1060,7 +1060,8 @@
   el.itemForm.addEventListener('submit', (event) => {
     event.preventDefault();
     if (!state.people.length) {
-      showItemError('Сначала добавьте хотя бы одного участника.');
+      showPersonError('Добавьте хотя бы одного участника.');
+      el.personName.focus();
       return;
     }
     const amount = parseMoney(el.itemAmount.value, currentCurrency().digits);
