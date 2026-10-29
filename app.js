@@ -858,7 +858,6 @@
     if (!state.lastItemPayerId) state.lastItemPayerId = person.id;
     if (hadNobody) {
       for (const item of state.items) {
-        if (item.sharedBy.length === 0) item.sharedBy = [person.id];
         if (!item.payerId) item.payerId = person.id;
       }
     }
