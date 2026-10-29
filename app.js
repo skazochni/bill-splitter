@@ -15,6 +15,13 @@
     JPY: { symbol: '¥', digits: 0 }
   };
   const AVATAR_CLASSES = 6;
+  const MAX_PEOPLE = 100;
+  const MAX_ITEMS = 500;
+  const MAX_ID_LENGTH = 80;
+  const MAX_PERSON_NAME = 40;
+  const MAX_ITEM_NAME = 60;
+  const SAVE_DEBOUNCE_MS = 250;
+  const LIVE_TOTAL_DELAY_MS = 600;
 
   let storageOk = true;
 
@@ -58,11 +65,11 @@
     out.equalTotal = intAmount(raw.equalTotal);
 
     const ids = new Set();
-    for (const p of Array.isArray(raw.people) ? raw.people.slice(0, 100) : []) {
+    for (const p of Array.isArray(raw.people) ? raw.people.slice(0, MAX_PEOPLE) : []) {
       if (!p || typeof p !== 'object') continue;
-      const name = String(p.name || '').trim().replace(/\s+/g, ' ').slice(0, 40);
+      const name = String(p.name || '').trim().replace(/\s+/g, ' ').slice(0, MAX_PERSON_NAME);
       if (!name) continue;
-      let id = typeof p.id === 'string' && p.id ? p.id.slice(0, 80) : uid('p');
+      let id = typeof p.id === 'string' && p.id ? p.id.slice(0, MAX_ID_LENGTH) : uid('p');
       while (ids.has(id)) id = uid('p');
       ids.add(id);
       out.people.push({ id, name });
@@ -71,13 +78,13 @@
     if (!out.people.length) out.equalTotal = 0;
 
     const itemIds = new Set();
-    for (const it of Array.isArray(raw.items) ? raw.items.slice(0, 500) : []) {
+    for (const it of Array.isArray(raw.items) ? raw.items.slice(0, MAX_ITEMS) : []) {
       if (!it || typeof it !== 'object') continue;
       const amount = intAmount(it.amount);
-      let id = typeof it.id === 'string' && it.id ? it.id.slice(0, 80) : uid('i');
+      let id = typeof it.id === 'string' && it.id ? it.id.slice(0, MAX_ID_LENGTH) : uid('i');
       while (itemIds.has(id)) id = uid('i');
       itemIds.add(id);
-      const name = String(it.name || '').trim().slice(0, 60);
+      const name = String(it.name || '').trim().slice(0, MAX_ITEM_NAME);
       const sharedBy = Array.isArray(it.sharedBy)
         ? [...new Set(it.sharedBy.filter((x) => typeof x === 'string' && ids.has(x)))]
         : [];
@@ -130,8 +137,8 @@
           ? entry.createdAt
           : new Date(0).toISOString();
         return {
-          id: typeof entry.id === 'string' && entry.id ? entry.id.slice(0, 80) : uid('h'),
-          name: String(entry.name || 'Счёт').trim().slice(0, 60) || 'Счёт',
+          id: typeof entry.id === 'string' && entry.id ? entry.id.slice(0, MAX_ID_LENGTH) : uid('h'),
+          name: String(entry.name || 'Счёт').trim().slice(0, MAX_ITEM_NAME) || 'Счёт',
           createdAt,
           currency,
           total: intAmount(entry.total),
@@ -458,7 +465,7 @@
 
   function scheduleSave() {
     if (saveTimer) clearTimeout(saveTimer);
-    saveTimer = setTimeout(saveNow, 250);
+    saveTimer = setTimeout(saveNow, SAVE_DEBOUNCE_MS);
   }
   function renderPeople() {
     el.peopleCount.textContent = String(state.people.length);
@@ -788,7 +795,7 @@
     if (liveTimer) clearTimeout(liveTimer);
     liveTimer = setTimeout(() => {
       el.totalLive.textContent = 'Итого: ' + money(result.total);
-    }, 600);
+    }, LIVE_TOTAL_DELAY_MS);
   }
 
   function summaryText() {
@@ -851,7 +858,7 @@
   }
 
   function addPerson(rawName) {
-    const name = String(rawName).trim().replace(/\s+/g, ' ').slice(0, 40);
+    const name = String(rawName).trim().replace(/\s+/g, ' ').slice(0, MAX_PERSON_NAME);
     if (!name) return { ok: false, error: 'Введите имя участника.' };
     const normalized = name.toLocaleLowerCase('ru-RU');
     if (state.people.some((p) => p.name.toLocaleLowerCase('ru-RU') === normalized)) {
@@ -998,7 +1005,7 @@
     }
     hideItemError();
     el.itemAmount.removeAttribute('aria-invalid');
-    const name = el.itemName.value.trim().slice(0, 60) || nextItemName();
+    const name = el.itemName.value.trim().slice(0, MAX_ITEM_NAME) || nextItemName();
     const payerId = state.lastItemPayerId || state.people[0].id;
     state.lastItemPayerId = payerId;
     state.items.push({
@@ -1052,7 +1059,7 @@
       event.target.value = centsToInput(item.amount, currentCurrency().digits);
       event.target.removeAttribute('aria-invalid');
     } else if (event.target.matches('.item-name')) {
-      const name = event.target.value.trim().slice(0, 60);
+      const name = event.target.value.trim().slice(0, MAX_ITEM_NAME);
       if (name) {
         item.name = name;
         event.target.value = item.name;
@@ -1194,7 +1201,7 @@
     }).format(new Date(savedAt));
     const record = {
       id: uid('h'),
-      name: el.historyName.value.trim().slice(0, 60) || 'Счёт от ' + dateLabel,
+      name: el.historyName.value.trim().slice(0, MAX_ITEM_NAME) || 'Счёт от ' + dateLabel,
       createdAt: savedAt,
       currency: state.currency,
       total: compute().total,
