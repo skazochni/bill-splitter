@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Bill Splitter — разделить счёт</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%230f766e'/%3E%3Cpath d='M6 3h12v18l-3-2-3 2-3-2-3 2V3Z' fill='none' stroke='%23fff' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M9 8h6M9 12h6' stroke='%23fff' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+  <header class="app-header">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3Z"/>
+          <path d="M9 8h6M9 12h6"/>
+        </svg>
+      </div>
+      <div>
+        <h1>Bill Splitter</h1>
+        <p class="subtitle">Разделите счёт без споров</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <label class="currency-box" for="currencySelect">
+        <span>Валюта</span>
+        <select id="currencySelect" aria-describedby="currencyNote">
+          <option value="RUB">₽ — рубль</option>
+          <option value="USD">$ — доллар</option>
+          <option value="EUR">€ — евро</option>
+          <option value="GBP">£ — фунт</option>
+          <option value="KZT">₸ — тенге</option>
+          <option value="AMD">֏ — драм</option>
+          <option value="GEL">₾ — лари</option>
+          <option value="JPY">¥ — иена</option>
+        </select>
+        <small class="currency-note" id="currencyNote">Курс не применяется при смене валюты</small>
+      </label>
+      <button class="btn btn-ghost" type="button" id="historyBtn">История · <span id="historyCount">0</span></button>
+      <button class="btn btn-ghost" type="button" id="resetBtn">Сбросить</button>
+    </div>
+  </header>
+
+  <dialog class="history-dialog" id="historyDialog" aria-labelledby="historyTitle">
+    <div class="panel-head history-dialog-head">
+      <div>
+        <h2 id="historyTitle">История счетов</h2>
+        <p class="panel-sub">Локально в браузере · хранятся последние 20 счетов</p>
+      </div>
+      <button class="btn btn-ghost" type="button" id="historyClose">Закрыть</button>
+    </div>
+    <div class="history-save-row">
+      <label class="field" for="historyName">
+        Название
+        <input class="input" id="historyName" type="text" maxlength="60" placeholder="Например, ужин в пятницу" autocomplete="off">
+      </label>
+      <button class="btn btn-primary" type="button" id="historySave">Сохранить счёт</button>
+    </div>
+    <p class="form-error history-error" id="historyError" role="alert" hidden></p>
+    <p class="empty small" id="historyEmpty">Сохранённых счетов пока нет.</p>
+    <ul class="history-list" id="historyList"></ul>
+  </dialog>
+
+  <div class="notice" id="storageNotice" role="status" hidden>
+    Не удалось сохранить данные в этом браузере — расчёт работает, но после перезагрузки сбросится.
+  </div>
+
+  <main class="layout">
+    <div class="main-col">
+      <section class="card people-card" aria-labelledby="peopleTitle">
+        <div class="panel-head">
+          <div>
+            <h2 id="peopleTitle">Участники</h2>
+            <p class="panel-sub">Кто делит счёт</p>
+          </div>
+          <span class="count-badge" id="peopleCount">0</span>
+        </div>
+        <form class="add-person" id="personForm" novalidate>
+          <label class="sr-only" for="personName">Имя участника</label>
+          <input class="input" id="personName" type="text" placeholder="Имя участника" maxlength="40" autocomplete="off">
+          <button class="btn btn-primary" type="submit">Добавить</button>
+        </form>
+        <p class="form-error" id="personError" role="alert" hidden></p>
+        <div class="demo-callout" id="demoCallout" hidden>
+          <div>
+            <strong>Хотите посмотреть, как работает расчёт?</strong>
+            <p>Заполните счёт примером — его можно будет изменить или сбросить.</p>
+          </div>
+          <button class="btn btn-ghost" type="button" id="loadDemoBtn">Заполнить пример</button>
+        </div>
+        <p class="demo-status" id="demoStatus" role="status" aria-live="polite"></p>
+        <div class="chips" id="peopleList"></div>
+        <p class="hint" id="peopleHint" hidden>Добавьте хотя бы одного участника — без этого расчёт невозможен.</p>
+      </section>
+
+      <div class="mode-tabs" role="tablist" aria-label="Режим деления">
+        <button class="mode-tab" type="button" role="tab" id="tab-itemized" data-mode="itemized" aria-controls="itemizedPanel" aria-selected="true">По позициям</button>
+        <button class="mode-tab" type="button" role="tab" id="tab-equal" data-mode="equal" aria-controls="equalPanel" aria-selected="false" tabindex="-1">Поровну</button>
+      </div>
+
+      <section class="card" id="itemizedPanel" role="tabpanel" aria-labelledby="tab-itemized">
+        <div class="panel-head">
+          <div>
+            <h2>Позиции</h2>
+            <p class="panel-sub">Отметьте, кто что заказал и кто оплатил</p>
+          </div>
+          <div class="subtotal-badge">
+            <span>Позиции</span>
+            <strong id="itemSubtotal">0,00 ₽</strong>
+          </div>
+        </div>
+
+        <form class="add-item" id="itemForm" novalidate>
+          <label class="sr-only" for="itemName">Название позиции</label>
+          <input class="input" id="itemName" type="text" placeholder="Название, например «Пицца»" maxlength="60" autocomplete="off">
+          <div class="money-field add-money">
+            <label class="sr-only" for="itemAmount">Сумма позиции</label>
+            <input id="itemAmount" type="text" inputmode="decimal" placeholder="0,00" autocomplete="off">
+            <span class="currency-symbol">₽</span>
+          </div>
+          <button class="btn btn-primary" id="itemSubmit" type="submit">Добавить</button>
+        </form>
+        <p class="form-error" id="itemError" role="alert" hidden></p>
+
+        <div class="empty" id="itemsEmpty">
+          <p class="empty-title">Пока нет позиций</p>
+          <p id="itemsEmptyDescription">Сначала добавьте участников выше. Затем добавьте первую позицию и отметьте, кто её делит.</p>
+        </div>
+        <ul class="items" id="itemsList"></ul>
+        <p class="items-warning" id="itemsExcluded" hidden></p>
+
+        <div class="settings">
+          <div class="settings-head">
+            <h3>Скидка, налог и чаевые</h3>
+            <p class="hint">Скидка уменьшает сумму позиций до расчёта налога и чаевых</p>
+          </div>
+          <div class="settings-grid">
+            <div class="setting">
+              <label for="discountInput">Скидка, %</label>
+              <div class="money-field percent-field">
+                <input id="discountInput" type="text" inputmode="decimal" placeholder="0" autocomplete="off" aria-describedby="discountHint">
+                <span>%</span>
+              </div>
+              <span class="setting-hint" id="discountHint">До 100%</span>
+            </div>
+            <div class="setting">
+              <label for="taxInput">Налог, %</label>
+              <div class="money-field percent-field">
+                <input id="taxInput" type="text" inputmode="decimal" placeholder="0" autocomplete="off">
+                <span>%</span>
+              </div>
+            </div>
+            <div class="setting">
+              <label for="tipInput">Чаевые, %</label>
+              <div class="money-field percent-field">
+                <input id="tipInput" type="text" inputmode="decimal" placeholder="0" autocomplete="off">
+                <span>%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="card" id="equalPanel" role="tabpanel" aria-labelledby="tab-equal" hidden>
+        <div class="panel-head">
+          <div>
+            <h2>Счёт поровну</h2>
+            <p class="panel-sub">Вся сумма делится на всех участников</p>
+          </div>
+        </div>
+        <div class="equal-grid">
+          <div class="field">
+            <label for="equalTotal">Сумма счёта</label>
+            <div class="money-field">
+              <input id="equalTotal" type="text" inputmode="decimal" placeholder="0,00" autocomplete="off">
+              <span class="currency-symbol">₽</span>
+            </div>
+          </div>
+          <div class="field">
+            <label for="equalPayer">Плательщик</label>
+            <select class="input" id="equalPayer"></select>
+          </div>
+        </div>
+        <p class="equal-note is-muted" id="equalNote">Сначала добавьте участников — затем сумму счёта.</p>
+      </section>
+    </div>
+
+    <aside class="card summary-card" aria-labelledby="summaryTitle">
+      <div class="summary-head">
+        <p class="eyebrow">К оплате</p>
+        <h2 class="sr-only" id="summaryTitle">Итого</h2>
+        <div class="grand-total" id="grandTotal">0,00 ₽</div>
+        <p class="grand-sub" id="grandSub">Добавьте участников</p>
+      </div>
+      <div class="totals" id="summaryTotals"></div>
+      <div class="summary-section">
+        <div class="section-head">
+          <h3>По участникам</h3>
+          <span class="muted" id="summaryPeopleCount"></span>
+        </div>
+        <div class="sum-people" id="summaryRows"></div>
+        <p class="empty small" id="summaryEmpty">Добавьте участников, чтобы увидеть, кто сколько платит.</p>
+      </div>
+      <div class="summary-section" id="settleBlock">
+        <div class="section-head">
+          <h3>Переводы</h3>
+          <span class="muted">кто кому</span>
+        </div>
+        <ul class="settle-list" id="settleList"></ul>
+        <p class="hint" id="settleEmpty">Все в расчёте — переводы не нужны.</p>
+      </div>
+      <div class="summary-actions" id="exportActions">
+        <button class="btn btn-ghost" type="button" id="copySummary" aria-describedby="exportHelp" disabled>Скопировать расчёт</button>
+        <button class="btn btn-ghost" type="button" id="printSummary" aria-describedby="exportHelp" disabled>Печать / PDF</button>
+      </div>
+      <p class="export-status" id="exportHelp">Добавьте участников и укажите сумму счёта, чтобы включить экспорт.</p>
+      <p class="export-status" id="exportStatus" role="status" aria-live="polite"></p>
+    </aside>
+  </main>
+
+  <button class="mobile-total" id="mobileTotal" type="button" aria-label="Перейти к итогам счёта">
+    <span>
+      <span class="mobile-total-label">Итого к оплате</span>
+      <span class="mobile-total-amount" id="mobileTotalAmount">0,00 ₽</span>
+    </span>
+    <span class="mobile-total-action">К итогу ↑</span>
+  </button>
+
+  <div class="sr-only" id="totalLive" aria-live="polite" role="status"></div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

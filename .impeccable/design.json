@@ -1,0 +1,570 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-29T11:25:04Z",
+  "title": "Design System: Bill Splitter",
+  "extensions": {
+    "colorMeta": {
+      "primary": {
+        "role": "primary",
+        "displayName": "Глубокий хвойный",
+        "canonical": "#0f766e",
+        "tonalRamp": [
+          "#00100d",
+          "#002c29",
+          "#004d48",
+          "#017169",
+          "#3c938a",
+          "#69b5ac",
+          "#99d7d0",
+          "#ccfaf3"
+        ]
+      },
+      "primary-hover": {
+        "role": "primary",
+        "displayName": "Тёмный хвойный",
+        "canonical": "#0b5f59",
+        "tonalRamp": [
+          "#000f0e",
+          "#002c29",
+          "#004d48",
+          "#236f68",
+          "#4b908a",
+          "#74b3ac",
+          "#a1d5cf",
+          "#d1f8f3"
+        ]
+      },
+      "primary-soft": {
+        "role": "primary",
+        "displayName": "Хвойная подложка",
+        "canonical": "#e6f5f2",
+        "tonalRamp": [
+          "#060d0c",
+          "#1d2726",
+          "#394543",
+          "#586462",
+          "#788683",
+          "#9ca8a6",
+          "#c1ccca",
+          "#e8f1ef"
+        ]
+      },
+      "primary-border": {
+        "role": "primary",
+        "displayName": "Хвойная линия",
+        "canonical": "#9ed9d0",
+        "tonalRamp": [
+          "#00100d",
+          "#002d28",
+          "#114c46",
+          "#336d65",
+          "#578e87",
+          "#7eb1a9",
+          "#a8d4cd",
+          "#d6f6f1"
+        ]
+      },
+      "on-primary": {
+        "role": "neutral",
+        "displayName": "Текст на хвое",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#252525",
+          "#424242",
+          "#616161",
+          "#828282",
+          "#a5a5a5",
+          "#c9c9c9",
+          "#eeeeee"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Прохладная бумага",
+        "canonical": "#f3f5f7",
+        "tonalRamp": [
+          "#0a0b0c",
+          "#242526",
+          "#414244",
+          "#606163",
+          "#818284",
+          "#a3a5a7",
+          "#c8c9cb",
+          "#edeef0"
+        ]
+      },
+      "sheet": {
+        "role": "neutral",
+        "displayName": "Белый лист",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#252525",
+          "#424242",
+          "#616161",
+          "#828282",
+          "#a5a5a5",
+          "#c9c9c9",
+          "#eeeeee"
+        ]
+      },
+      "sheet-sunken": {
+        "role": "neutral",
+        "displayName": "Утопленный лист",
+        "canonical": "#f6f8f9",
+        "tonalRamp": [
+          "#0a0b0c",
+          "#242526",
+          "#414243",
+          "#606162",
+          "#818383",
+          "#a4a5a6",
+          "#c8c9ca",
+          "#edefef"
+        ]
+      },
+      "sheet-recessed": {
+        "role": "neutral",
+        "displayName": "Вырезанный лист",
+        "canonical": "#eef1f4",
+        "tonalRamp": [
+          "#0a0b0d",
+          "#232527",
+          "#404245",
+          "#5f6164",
+          "#808385",
+          "#a3a5a8",
+          "#c7c9cb",
+          "#edeff0"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Чернила",
+        "canonical": "#171b21",
+        "tonalRamp": [
+          "#090b0f",
+          "#22252b",
+          "#3e4249",
+          "#5d6269",
+          "#7e838a",
+          "#a1a5ad",
+          "#c5c9d0",
+          "#ebeff3"
+        ]
+      },
+      "ink-soft": {
+        "role": "neutral",
+        "displayName": "Мягкие чернила",
+        "canonical": "#3f4753",
+        "tonalRamp": [
+          "#070b12",
+          "#1f252f",
+          "#3b434e",
+          "#59626f",
+          "#7a8390",
+          "#9da6b2",
+          "#c2cad5",
+          "#e9eff7"
+        ]
+      },
+      "ink-muted": {
+        "role": "neutral",
+        "displayName": "Подпись",
+        "canonical": "#5f6875",
+        "tonalRamp": [
+          "#070b12",
+          "#1f252f",
+          "#3b434e",
+          "#59626f",
+          "#7a8390",
+          "#9da6b2",
+          "#c2cad5",
+          "#e9eff7"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Линия",
+        "canonical": "#e2e6eb",
+        "tonalRamp": [
+          "#090b0e",
+          "#232528",
+          "#3f4246",
+          "#5e6266",
+          "#7f8387",
+          "#a2a5a9",
+          "#c6c9cd",
+          "#eceff1"
+        ]
+      },
+      "line-strong": {
+        "role": "neutral",
+        "displayName": "Сильная линия",
+        "canonical": "#cfd6de",
+        "tonalRamp": [
+          "#080b0f",
+          "#21262b",
+          "#3d4349",
+          "#5c6269",
+          "#7d838a",
+          "#a0a6ac",
+          "#c4cad0",
+          "#ebeff3"
+        ]
+      },
+      "danger": {
+        "role": "semantic",
+        "displayName": "Сигнал ошибки",
+        "canonical": "#b42318",
+        "tonalRamp": [
+          "#220000",
+          "#4e0000",
+          "#810000",
+          "#b12015",
+          "#d84d3d",
+          "#fa7866",
+          "#feb4a7",
+          "#ffe9e5"
+        ]
+      },
+      "danger-soft": {
+        "role": "semantic",
+        "displayName": "Тихая ошибка",
+        "canonical": "#fef3f2",
+        "tonalRamp": [
+          "#0f0a09",
+          "#2a2323",
+          "#48403f",
+          "#685f5e",
+          "#89807f",
+          "#aca3a2",
+          "#cfc7c6",
+          "#f3edec"
+        ]
+      },
+      "warning": {
+        "role": "semantic",
+        "displayName": "Предупреждение",
+        "canonical": "#b54708",
+        "tonalRamp": [
+          "#200000",
+          "#441200",
+          "#712700",
+          "#a23c00",
+          "#cb5e2c",
+          "#ec855a",
+          "#feb598",
+          "#ffe9e1"
+        ]
+      },
+      "warning-soft": {
+        "role": "semantic",
+        "displayName": "Тихое предупреждение",
+        "canonical": "#fffaeb",
+        "tonalRamp": [
+          "#0d0b05",
+          "#28251b",
+          "#464236",
+          "#656154",
+          "#878275",
+          "#a9a598",
+          "#cdc9be",
+          "#f1eee6"
+        ]
+      },
+      "warning-line": {
+        "role": "semantic",
+        "displayName": "Линия предупреждения",
+        "canonical": "#f3c46b",
+        "tonalRamp": [
+          "#150800",
+          "#332200",
+          "#573d00",
+          "#7d5a05",
+          "#a57a1a",
+          "#c79e51",
+          "#e7c484",
+          "#ffeccb"
+        ]
+      },
+      "positive": {
+        "role": "semantic",
+        "displayName": "Подтверждение",
+        "canonical": "#067647",
+        "tonalRamp": [
+          "#001104",
+          "#002e18",
+          "#00502e",
+          "#017445",
+          "#3c9666",
+          "#69b98b",
+          "#99dbb3",
+          "#ccfcdd"
+        ]
+      },
+      "dark-paper": {
+        "role": "neutral-dark",
+        "displayName": "Тёмная бумага",
+        "canonical": "#0e1116",
+        "tonalRamp": [
+          "#090b0f",
+          "#22252a",
+          "#3f4248",
+          "#5e6168",
+          "#7e8389",
+          "#a1a5ac",
+          "#c6c9cf",
+          "#eceff3"
+        ]
+      },
+      "dark-sheet": {
+        "role": "neutral-dark",
+        "displayName": "Тёмный лист",
+        "canonical": "#161b22",
+        "tonalRamp": [
+          "#080b10",
+          "#21252c",
+          "#3d424a",
+          "#5c626a",
+          "#7d838c",
+          "#a0a6ae",
+          "#c4cad1",
+          "#ebeff4"
+        ]
+      },
+      "dark-accent": {
+        "role": "primary-dark",
+        "displayName": "Мятный хвойный",
+        "canonical": "#2dd4bf",
+        "tonalRamp": [
+          "#00100c",
+          "#002d27",
+          "#014d45",
+          "#087165",
+          "#089787",
+          "#31bdaa",
+          "#78dfce",
+          "#b9fff2"
+        ]
+      },
+      "dark-on-primary": {
+        "role": "neutral-dark",
+        "displayName": "Текст на мяте",
+        "canonical": "#062e2a",
+        "tonalRamp": [
+          "#000f0d",
+          "#0a2b27",
+          "#264945",
+          "#446a64",
+          "#668b86",
+          "#8aada8",
+          "#b2d1cc",
+          "#def4f0"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Итоговая сумма в сводке; 28px на мобильном."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Название продукта в шапке."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Заголовки карточек и секций сводки."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Базовый текст, имена, названия позиций."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Метки полей и пояснения под заголовками."
+      },
+      "caption": {
+        "displayName": "Caption",
+        "purpose": "Разбивка, сноски, метаданные истории."
+      }
+    },
+    "shadows": [
+      {
+        "name": "card",
+        "value": "0 1px 2px rgba(16,24,40,.04), 0 12px 32px -20px rgba(16,24,40,.28)",
+        "purpose": "Все карточки, сводка, диалог."
+      },
+      {
+        "name": "sm",
+        "value": "0 1px 2px rgba(16,24,40,.06)",
+        "purpose": "Селект валюты и активный таб."
+      },
+      {
+        "name": "mobile-total",
+        "value": "0 -8px 28px rgba(16,24,40,.12)",
+        "purpose": "Закреплённая мобильная панель итога."
+      }
+    ],
+    "motion": [
+      {
+        "name": "transition-fast",
+        "value": "0.15s ease",
+        "purpose": "Смена фона, рамки и цвета у контролов."
+      },
+      {
+        "name": "press",
+        "value": "translateY(1px)",
+        "purpose": "Отклик на нажатие кнопки."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "0.01ms",
+        "purpose": "Глобальное подавление переходов при prefers-reduced-motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "layout",
+        "value": "940px"
+      },
+      {
+        "name": "mobile",
+        "value": "640px"
+      },
+      {
+        "name": "narrow",
+        "value": "430px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Основная кнопка",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Единственное главное действие в блоке: добавить участника, добавить позицию, сохранить счёт.",
+      "html": "<button class=\"ds-btn ds-btn-primary\" type=\"button\">Добавить</button>",
+      "css": ".ds-btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; border: 1px solid transparent; border-radius: 10px; padding: 10px 15px; font: inherit; font-size: 13.5px; font-weight: 600; line-height: 1.45; white-space: nowrap; cursor: pointer; transition: background .15s, border-color .15s, transform .06s; } .ds-btn-primary { background: var(--accent, #0f766e); color: var(--accent-contrast, #ffffff); } .ds-btn-primary:hover { background: var(--accent-hover, #0b5f59); } .ds-btn-primary:active { transform: translateY(1px); } .ds-btn:focus-visible { outline: 2px solid var(--accent, #0f766e); outline-offset: 2px; }"
+    },
+    {
+      "name": "Кнопка-призрак",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Вторичные действия: история, сброс, экспорт, закрытие диалога.",
+      "html": "<button class=\"ds-btn-ghost\" type=\"button\">История · <span>3</span></button>",
+      "css": ".ds-btn-ghost { display: inline-flex; align-items: center; justify-content: center; gap: 7px; border: 1px solid var(--border, #e2e6eb); border-radius: 10px; padding: 10px 15px; background: var(--surface, #fff); color: var(--text-soft, #3f4753); font: inherit; font-size: 13.5px; font-weight: 600; white-space: nowrap; cursor: pointer; transition: background .15s, border-color .15s, transform .06s; } .ds-btn-ghost:hover { background: var(--surface-2, #f6f8f9); border-color: var(--border-strong, #cfd6de); } .ds-btn-ghost:active { transform: translateY(1px); } .ds-btn-ghost:focus-visible { outline: 2px solid var(--accent, #0f766e); outline-offset: 2px; }"
+    },
+    {
+      "name": "Поле суммы с валютой",
+      "kind": "input",
+      "refersTo": "money-field",
+      "description": "Денежный ввод: символ валюты внутри рамки, табличные цифры, фокус-кольцо на контейнере.",
+      "html": "<div class=\"ds-money\"><input class=\"ds-money-input\" type=\"text\" inputmode=\"decimal\" placeholder=\"0,00\" aria-label=\"Сумма позиции\"><span class=\"ds-money-symbol\">₽</span></div>",
+      "css": ".ds-money { display: flex; align-items: center; gap: 6px; padding: 0 11px; border: 1px solid var(--border, #e2e6eb); border-radius: 10px; background: var(--surface, #fff); transition: border-color .15s, box-shadow .15s; } .ds-money:hover { border-color: var(--border-strong, #cfd6de); } .ds-money:focus-within { border-color: var(--accent, #0f766e); box-shadow: 0 0 0 3px var(--accent-ring, rgba(15,118,110,.16)); } .ds-money-input { width: 100%; min-width: 0; border: 0; background: transparent; color: var(--text, #171b21); padding: 10px 0; font: inherit; font-size: 14px; font-variant-numeric: tabular-nums; outline: none; } .ds-money-input::placeholder { color: var(--muted, #5f6875); } .ds-money-symbol { color: var(--muted, #5f6875); font-size: 13px; }"
+    },
+    {
+      "name": "Переключатель режима",
+      "kind": "nav",
+      "refersTo": "tab-active",
+      "description": "Сегментированный выбор «По позициям / Поровну» с ролями tablist/tab.",
+      "html": "<div class=\"ds-tabs\" role=\"tablist\" aria-label=\"Режим деления\"><button class=\"ds-tab\" type=\"button\" role=\"tab\" aria-selected=\"true\">По позициям</button><button class=\"ds-tab\" type=\"button\" role=\"tab\" aria-selected=\"false\" tabindex=\"-1\">Поровну</button></div>",
+      "css": ".ds-tabs { display: inline-flex; gap: 3px; padding: 4px; background: var(--surface-3, #eef1f4); border: 1px solid var(--border, #e2e6eb); border-radius: 12px; } .ds-tab { border: 0; background: transparent; color: var(--muted, #5f6875); padding: 8px 16px; border-radius: 9px; font: inherit; font-size: 13.5px; font-weight: 600; cursor: pointer; transition: background .15s, color .15s; } .ds-tab:hover { color: var(--text, #171b21); } .ds-tab[aria-selected=\"true\"] { background: var(--surface, #fff); color: var(--text, #171b21); box-shadow: 0 1px 2px rgba(16,24,40,.06); } .ds-tab:focus-visible { outline: 2px solid var(--accent, #0f766e); outline-offset: 2px; }"
+    },
+    {
+      "name": "Чип участника",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Компактное представление человека: аватар-инициал, имя, удаление 24 px.",
+      "html": "<span class=\"ds-chip\"><span class=\"ds-chip-avatar\">А</span><span class=\"ds-chip-name\">Анна</span><button class=\"ds-chip-remove\" type=\"button\" aria-label=\"Удалить участника Анна\"><svg viewBox=\"0 0 12 12\" aria-hidden=\"true\" width=\"12\" height=\"12\"><path d=\"M2 2l8 8M10 2l-8 8\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\"/></svg></button></span>",
+      "css": ".ds-chip { display: inline-flex; align-items: center; gap: 7px; padding: 4px 4px 4px 5px; border: 1px solid var(--border, #e2e6eb); border-radius: 999px; background: var(--surface, #fff); font-size: 13px; font-weight: 500; max-width: 100%; } .ds-chip-avatar { flex: none; width: 26px; height: 26px; border-radius: 50%; display: inline-grid; place-items: center; font-size: 11px; font-weight: 700; background: #ccfbf1; color: #115e59; } .ds-chip-name { max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .ds-chip-remove { display: grid; place-items: center; width: 24px; height: 24px; flex: none; border: 0; border-radius: 50%; background: transparent; color: var(--muted, #5f6875); cursor: pointer; } .ds-chip-remove:hover { background: var(--danger-soft, #fef3f2); color: var(--danger, #b42318); } .ds-chip-remove:focus-visible { outline: 2px solid var(--accent, #0f766e); outline-offset: 1px; }"
+    },
+    {
+      "name": "Переключатель «делить между»",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Выбор участников позиции: состояние читается цветом, точкой и aria-pressed одновременно.",
+      "html": "<div class=\"ds-toggles\"><button class=\"ds-toggle\" type=\"button\" aria-pressed=\"true\">Анна</button><button class=\"ds-toggle\" type=\"button\" aria-pressed=\"false\">Борис</button></div>",
+      "css": ".ds-toggles { display: flex; flex-wrap: wrap; gap: 5px; } .ds-toggle { display: inline-flex; align-items: center; gap: 5px; padding: 5px 9px; border: 1px solid var(--border, #e2e6eb); border-radius: 999px; background: var(--surface, #fff); color: var(--muted, #5f6875); font: inherit; font-size: 11.5px; cursor: pointer; transition: background .15s, border-color .15s, color .15s; } .ds-toggle::before { content: \"\"; width: 6px; height: 6px; border-radius: 50%; background: var(--border-strong, #cfd6de); } .ds-toggle[aria-pressed=\"true\"] { background: var(--accent-soft, #e6f5f2); border-color: var(--accent-border, #9ed9d0); color: var(--accent-strong, #0b5f59); font-weight: 600; } .ds-toggle[aria-pressed=\"true\"]::before { background: var(--accent, #0f766e); } .ds-toggle:focus-visible { outline: 2px solid var(--accent, #0f766e); outline-offset: 1px; }"
+    },
+    {
+      "name": "Карточка позиции",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Строка счёта: название, сумма, плательщик, набор участников и подпись о делении.",
+      "html": "<div class=\"ds-item\"><div class=\"ds-item-head\"><input class=\"ds-item-name\" type=\"text\" value=\"Пицца\" aria-label=\"Название позиции\"><div class=\"ds-item-money\"><input type=\"text\" inputmode=\"decimal\" value=\"1200,00\" aria-label=\"Сумма позиции\"><span>₽</span></div><button class=\"ds-item-delete\" type=\"button\" aria-label=\"Удалить позицию Пицца\"><svg viewBox=\"0 0 16 16\" width=\"16\" height=\"16\" aria-hidden=\"true\"><path d=\"M3 4h10M6.5 2h3M5 4l.6 9h4.8L11 4\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg></button></div><div class=\"ds-item-foot\"><span class=\"ds-item-note\">3 участника · по 400,00 ₽</span></div></div>",
+      "css": ".ds-item { border: 1px solid var(--border, #e2e6eb); border-radius: 14px; padding: 12px 12px 10px; background: var(--surface, #fff); } .ds-item:hover { border-color: var(--border-strong, #cfd6de); } .ds-item-head { display: flex; align-items: center; gap: 8px; } .ds-item-name { flex: 1; min-width: 0; padding: 7px 8px; border: 1px solid transparent; border-radius: 8px; background: transparent; color: var(--text, #171b21); font: inherit; font-size: 14px; font-weight: 600; } .ds-item-name:hover { background: var(--surface-2, #f6f8f9); } .ds-item-name:focus { outline: none; background: var(--surface-2, #f6f8f9); border-color: var(--border-strong, #cfd6de); } .ds-item-money { display: flex; align-items: center; gap: 6px; width: 142px; padding: 0 11px; border: 1px solid var(--border, #e2e6eb); border-radius: 10px; background: var(--surface, #fff); } .ds-item-money input { width: 100%; min-width: 0; border: 0; background: transparent; color: var(--text, #171b21); padding: 10px 0; font: inherit; font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums; text-align: right; outline: none; } .ds-item-money span { color: var(--muted, #5f6875); font-size: 13px; } .ds-item-delete { width: 32px; height: 32px; flex: none; display: grid; place-items: center; border: 0; border-radius: 9px; background: transparent; color: var(--muted, #5f6875); cursor: pointer; } .ds-item-delete:hover { background: var(--danger-soft, #fef3f2); color: var(--danger, #b42318); } .ds-item-foot { margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--border, #e2e6eb); } .ds-item-note { font-size: 11.5px; color: var(--muted, #5f6875); }"
+    },
+    {
+      "name": "Строка участника в сводке",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Итог по человеку: сумма к оплате, разбивка и баланс «вернут / доплатит».",
+      "html": "<div class=\"ds-person\"><div class=\"ds-person-top\"><span class=\"ds-person-name\"><span class=\"ds-avatar\">А</span><span>Анна</span></span><span class=\"ds-person-owed\">560,00 ₽</span></div><div class=\"ds-person-breakdown\">позиции 630,00 ₽ · скидка −63,00 ₽ · налог 56,00 ₽</div><div class=\"ds-person-balance\"><span class=\"ds-paid\">Оплачено 1 200,00 ₽</span><span class=\"ds-balance ds-negative\">доплатит 640,00 ₽</span></div></div>",
+      "css": ".ds-person { padding: 10px 12px; border: 1px solid var(--border, #e2e6eb); border-radius: 12px; background: var(--surface-2, #f6f8f9); } .ds-person-top { display: flex; justify-content: space-between; gap: 10px; align-items: center; } .ds-person-name { display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 600; } .ds-avatar { width: 24px; height: 24px; border-radius: 50%; display: inline-grid; place-items: center; font-size: 10px; font-weight: 700; background: #ccfbf1; color: #115e59; } .ds-person-owed { font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; } .ds-person-breakdown { margin-top: 5px; font-size: 11px; color: var(--muted, #5f6875); } .ds-person-balance { display: flex; justify-content: space-between; gap: 8px; margin-top: 7px; font-size: 11.5px; } .ds-paid { color: var(--muted, #5f6875); font-variant-numeric: tabular-nums; } .ds-balance { font-weight: 600; font-variant-numeric: tabular-nums; } .ds-negative { color: var(--negative, #b42318); }"
+    },
+    {
+      "name": "Строка перевода",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Готовый ответ «кто кому сколько» — единственный блок с хвойной подложкой на всю строку.",
+      "html": "<ul class=\"ds-settle\"><li class=\"ds-settle-item\"><span class=\"ds-settle-flow\">Борис <span class=\"ds-arrow\">→</span> Анна</span><span class=\"ds-settle-amount\">320,00 ₽</span></li></ul>",
+      "css": ".ds-settle { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; } .ds-settle-item { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 9px; background: var(--accent-soft, #e6f5f2); border: 1px solid var(--accent-border, #9ed9d0); font-size: 12.5px; } .ds-settle-flow { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--accent-strong, #0b5f59); font-weight: 600; } .ds-arrow { color: var(--muted, #5f6875); font-weight: 400; padding: 0 2px; } .ds-settle-amount { font-weight: 700; color: var(--accent-strong, #0b5f59); font-variant-numeric: tabular-nums; white-space: nowrap; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Тихий ресторанный чек",
+    "overview": "Интерфейс ведёт себя как аккуратно отпечатанный чек, который положили на стол: прохладная бумага фона, белые листы карточек, тиловые чернила вместо декора, суммы всегда справа и всегда одной шириной цифры. Слова служат цифрам: подписи мелкие и приглушённые, значения крупные и плотные. Плотность выше средней: двадцать человек и двадцать позиций должны помещаться на экране ноутбука без ощущения тесноты, поэтому ритм держится на 16 px между карточками и 20–22 px внутри карточки.",
+    "keyCharacteristics": [
+      "Прохладная бумага и белые листы: два уровня поверхности, без третьего декоративного.",
+      "Один акцент — глубокий хвойный; он означает действие или итог, не украшение.",
+      "Сводка закреплена сбоку на десктопе и прижата к низу на телефоне.",
+      "Тень — намёк на приподнятость, а не объём.",
+      "Деньги всегда: табличные цифры, выравнивание по правому краю, символ валюты внутри поля."
+    ],
+    "rules": [
+      {
+        "name": "The One Accent Rule",
+        "body": "Хвойный занимает не более десятой части экрана. Если он появляется в третий раз подряд на одной карточке, один из случаев — декор, и его нужно убрать.",
+        "section": "colors"
+      },
+      {
+        "name": "The Paper, Not Paint Rule",
+        "body": "Фон сообщает уровень, а не настроение: бумага → лист → утопленный лист. Цветная заливка допустима только как подложка результата.",
+        "section": "colors"
+      },
+      {
+        "name": "The Right Edge Rule",
+        "body": "Любая денежная величина выравнивается по правому краю и набирается табличными цифрами.",
+        "section": "typography"
+      },
+      {
+        "name": "The No Half-Step Rule",
+        "body": "Новые размеры не вводятся между 11 и 14 px. Канон: 11, 12, 13, 15, 17, 22, 28, 32.",
+        "section": "typography"
+      },
+      {
+        "name": "The Hint Rule",
+        "body": "Если тень видно как тень — она слишком сильная. Допустимы ровно три значения; четвёртое — признак, что элемент пытается казаться важнее итога.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do держать деньги в tabular-nums и по правому краю — в сводке, в позициях, в истории.",
+      "Do использовать хвойный только для действия, итога и состояния «выбрано».",
+      "Do сообщать о проблеме линией и подложкой предупреждения, а текст оставлять читаемым на белом.",
+      "Do оставлять 1 px рамку у всех карточек, даже в тёмной теме.",
+      "Do сохранять пропорцию «широкая колонка ввода + узкая сводка» на десктопе и переносить сводку вниз на мобильном."
+    ],
+    "donts": [
+      "Don't заливать карточки цветом целиком: цветная площадь — только подложка результата.",
+      "Don't использовать градиенты вне логотипа; фон страницы — единственное исключение.",
+      "Don't применять хвойный к ошибкам и предупреждениям.",
+      "Don't усиливать тень на наведении — меняйте рамку или фон.",
+      "Don't вводить размеры шрифта между 11 и 14 px.",
+      "Don't делать контролы ниже 24 px и уже 24 px."
+    ]
+  }
+}

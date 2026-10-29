@@ -1,0 +1,253 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e9]:
+      - heading "Bill Splitter" [level=1] [ref=e10]
+      - paragraph [ref=e11]: Разделите счёт без споров
+    - generic [ref=e12]:
+      - generic [ref=e13]:
+        - generic [ref=e14]: Валюта
+        - combobox "Валюта Курс не применяется при смене валюты" [ref=e15] [cursor=pointer]:
+          - option "₽ — рубль" [selected]
+          - option "$ — доллар"
+          - option "€ — евро"
+          - option "£ — фунт"
+          - option "₸ — тенге"
+          - option "֏ — драм"
+          - option "₾ — лари"
+          - option "¥ — иена"
+        - generic [ref=e16]: Курс не применяется при смене валюты
+      - button "История · 0" [ref=e17] [cursor=pointer]:
+        - text: История ·
+        - generic [ref=e18]: "0"
+      - button "Сбросить" [ref=e19] [cursor=pointer]
+  - main [ref=e20]:
+    - generic [ref=e21]:
+      - region [ref=e22]:
+        - generic [ref=e23]:
+          - generic [ref=e24]:
+            - heading "Участники" [level=2] [ref=e25]
+            - paragraph [ref=e26]: Кто делит счёт
+          - generic [ref=e27]: "3"
+        - generic [ref=e28]:
+          - generic [ref=e29]: Имя участника
+          - textbox "Имя участника" [ref=e30]
+          - button "Добавить" [ref=e31] [cursor=pointer]
+        - status [ref=e104]: Пример загружен. Участников, позиции и суммы можно изменить.
+        - generic [ref=e105]:
+          - generic [ref=e106]:
+            - generic [aria-hidden] [ref=e107]: А
+            - generic "Анна" [ref=e108]
+            - button "Удалить участника Анна" [ref=e109] [cursor=pointer]
+          - generic [ref=e112]:
+            - generic [aria-hidden] [ref=e113]: Б
+            - generic "Борис" [ref=e114]
+            - button "Удалить участника Борис" [ref=e115] [cursor=pointer]
+          - generic [ref=e118]:
+            - generic [aria-hidden] [ref=e119]: В
+            - generic "Вера" [ref=e120]
+            - button "Удалить участника Вера" [ref=e121] [cursor=pointer]
+      - tablist "Режим деления" [ref=e38]:
+        - tab "По позициям" [selected] [ref=e39] [cursor=pointer]
+        - tab "Поровну" [ref=e40] [cursor=pointer]
+      - tabpanel "По позициям" [ref=e41]:
+        - generic [ref=e42]:
+          - generic [ref=e43]:
+            - heading "Позиции" [level=2] [ref=e44]
+            - paragraph [ref=e45]: Отметьте, кто что заказал и кто оплатил
+          - generic [ref=e46]:
+            - generic [ref=e47]: Позиции
+            - strong [ref=e48]: 2 300,00 ₽
+        - generic [ref=e49]:
+          - generic [ref=e50]: Название позиции
+          - textbox "Название позиции" [ref=e51]:
+            - /placeholder: Название, например «Пицца»
+          - generic [ref=e52]:
+            - generic [ref=e53]: Сумма позиции
+            - textbox "Сумма позиции" [ref=e54]:
+              - /placeholder: 0,00
+            - generic [ref=e55]: ₽
+          - button "Добавить" [ref=e56] [cursor=pointer]
+        - list [ref=e124]:
+          - listitem [ref=e125]:
+            - generic [ref=e126]:
+              - generic [ref=e127]: Название позиции
+              - textbox "Название позиции" [ref=e128]: Пицца
+              - generic [ref=e129]:
+                - generic [ref=e130]: Сумма позиции
+                - textbox "Сумма позиции" [ref=e131]:
+                  - /placeholder: 0,00
+                  - text: 1200,00
+                - generic [ref=e132]: ₽
+              - button "Удалить позицию Пицца" [ref=e133] [cursor=pointer]
+            - generic [ref=e136]:
+              - generic [ref=e137]:
+                - text: Плательщик
+                - combobox "Плательщик" [ref=e138]:
+                  - option "Анна" [selected]
+                  - option "Борис"
+                  - option "Вера"
+              - generic [ref=e139]:
+                - generic [ref=e140]: "Делить между:"
+                - generic [ref=e141]:
+                  - button "Анна" [pressed] [ref=e142] [cursor=pointer]
+                  - button "Борис" [pressed] [ref=e143] [cursor=pointer]
+                  - button "Вера" [pressed] [ref=e144] [cursor=pointer]
+            - paragraph [ref=e145]: 3 участника · по 400,00 ₽
+            - text: "!"
+          - listitem [ref=e146]:
+            - generic [ref=e147]:
+              - generic [ref=e148]: Название позиции
+              - textbox "Название позиции" [ref=e149]: Салат
+              - generic [ref=e150]:
+                - generic [ref=e151]: Сумма позиции
+                - textbox "Сумма позиции" [ref=e152]:
+                  - /placeholder: 0,00
+                  - text: 650,00
+                - generic [ref=e153]: ₽
+              - button "Удалить позицию Салат" [ref=e154] [cursor=pointer]
+            - generic [ref=e157]:
+              - generic [ref=e158]:
+                - text: Плательщик
+                - combobox "Плательщик" [ref=e159]:
+                  - option "Анна"
+                  - option "Борис" [selected]
+                  - option "Вера"
+              - generic [ref=e160]:
+                - generic [ref=e161]: "Делить между:"
+                - generic [ref=e162]:
+                  - button "Анна" [ref=e163] [cursor=pointer]
+                  - button "Борис" [pressed] [ref=e164] [cursor=pointer]
+                  - button "Вера" [pressed] [ref=e165] [cursor=pointer]
+            - paragraph [ref=e166]: 2 участника · по 325,00 ₽
+            - text: "!"
+          - listitem [ref=e167]:
+            - generic [ref=e168]:
+              - generic [ref=e169]: Название позиции
+              - textbox "Название позиции" [ref=e170]: Десерт
+              - generic [ref=e171]:
+                - generic [ref=e172]: Сумма позиции
+                - textbox "Сумма позиции" [ref=e173]:
+                  - /placeholder: 0,00
+                  - text: 450,00
+                - generic [ref=e174]: ₽
+              - button "Удалить позицию Десерт" [ref=e175] [cursor=pointer]
+            - generic [ref=e178]:
+              - generic [ref=e179]:
+                - text: Плательщик
+                - combobox "Плательщик" [ref=e180]:
+                  - option "Анна"
+                  - option "Борис"
+                  - option "Вера" [selected]
+              - generic [ref=e181]:
+                - generic [ref=e182]: "Делить между:"
+                - generic [ref=e183]:
+                  - button "Анна" [pressed] [ref=e184] [cursor=pointer]
+                  - button "Борис" [pressed] [ref=e185] [cursor=pointer]
+                  - button "Вера" [ref=e186] [cursor=pointer]
+            - paragraph [ref=e187]: 2 участника · по 225,00 ₽
+            - text: "!"
+        - generic [ref=e60]:
+          - generic [ref=e61]:
+            - heading "Скидка, налог и чаевые" [level=3] [ref=e62]
+            - paragraph [ref=e63]: Скидка уменьшает сумму позиций до расчёта налога и чаевых
+          - generic [ref=e64]:
+            - generic [ref=e65]:
+              - generic [ref=e66]: Скидка, %
+              - generic [ref=e67]:
+                - textbox "Скидка, %" [ref=e68]:
+                  - /placeholder: "0"
+                  - text: "5"
+                - generic [ref=e69]: "%"
+              - generic [ref=e70]: До 100%
+            - generic [ref=e71]:
+              - generic [ref=e72]: Налог, %
+              - generic [ref=e73]:
+                - textbox "Налог, %" [ref=e74]:
+                  - /placeholder: "0"
+                  - text: "10"
+                - generic [ref=e75]: "%"
+            - generic [ref=e76]:
+              - generic [ref=e77]: Чаевые, %
+              - generic [ref=e78]:
+                - textbox "Чаевые, %" [ref=e79]:
+                  - /placeholder: "0"
+                  - text: "10"
+                - generic [ref=e80]: "%"
+    - complementary [ref=e81]:
+      - generic [ref=e82]:
+        - paragraph [ref=e83]: К оплате
+        - heading "Итого" [level=2] [ref=e84]
+        - generic [ref=e85]: 2 622,00 ₽
+        - paragraph [ref=e86]: 3 участника · 3 позиции
+      - generic [ref=e87]:
+        - generic [ref=e188]:
+          - generic [ref=e189]: Позиции
+          - generic [ref=e190]: 2 300,00 ₽
+        - generic [ref=e191]:
+          - generic [ref=e192]: Скидка · 5%
+          - generic [ref=e193]: "-115,00 ₽"
+        - generic [ref=e194]:
+          - generic [ref=e195]: Налог · 10%
+          - generic [ref=e196]: 218,50 ₽
+        - generic [ref=e197]:
+          - generic [ref=e198]: Чаевые · 10%
+          - generic [ref=e199]: 218,50 ₽
+        - generic [ref=e200]:
+          - generic [ref=e201]: Всего
+          - generic [ref=e202]: 2 622,00 ₽
+      - generic [ref=e94]:
+        - generic [ref=e95]:
+          - heading "По участникам" [level=3] [ref=e96]
+          - generic [ref=e203]: 3 участника
+        - generic [ref=e204]:
+          - generic [ref=e205]:
+            - generic [ref=e206]:
+              - generic [ref=e207]:
+                - generic [aria-hidden] [ref=e208]: А
+                - generic [ref=e209]: Анна
+              - generic [ref=e210]: 712,51 ₽
+            - generic [ref=e211]: позиции 625,00 ₽ · скидка −31,25 ₽ · налог 59,38 ₽ · чаевые 59,38 ₽
+            - generic [ref=e212]:
+              - generic [ref=e213]: Оплачено 1 368,00 ₽
+              - generic [ref=e214]: вернут 655,49 ₽
+          - generic [ref=e215]:
+            - generic [ref=e216]:
+              - generic [ref=e217]:
+                - generic [aria-hidden] [ref=e218]: Б
+                - generic [ref=e219]: Борис
+              - generic [ref=e220]: 1 083,00 ₽
+            - generic [ref=e221]: позиции 950,00 ₽ · скидка −47,50 ₽ · налог 90,25 ₽ · чаевые 90,25 ₽
+            - generic [ref=e222]:
+              - generic [ref=e223]: Оплачено 741,00 ₽
+              - generic [ref=e224]: доплатит 342,00 ₽
+          - generic [ref=e225]:
+            - generic [ref=e226]:
+              - generic [ref=e227]:
+                - generic [aria-hidden] [ref=e228]: В
+                - generic [ref=e229]: Вера
+              - generic [ref=e230]: 826,49 ₽
+            - generic [ref=e231]: позиции 725,00 ₽ · скидка −36,25 ₽ · налог 68,87 ₽ · чаевые 68,87 ₽
+            - generic [ref=e232]:
+              - generic [ref=e233]: Оплачено 513,00 ₽
+              - generic [ref=e234]: доплатит 313,49 ₽
+      - generic [ref=e235]:
+        - generic [ref=e236]:
+          - heading "Переводы" [level=3] [ref=e237]
+          - generic [ref=e238]: кто кому
+        - list [ref=e239]:
+          - listitem [ref=e240]:
+            - generic [ref=e241]: Борис → Анна
+            - generic [ref=e242]: 342,00 ₽
+          - listitem [ref=e243]:
+            - generic [ref=e244]: Вера → Анна
+            - generic [ref=e245]: 313,49 ₽
+      - generic [ref=e98]:
+        - button "Скопировать расчёт" [ref=e99] [cursor=pointer]
+        - button "Печать / PDF" [ref=e100] [cursor=pointer]
+      - status [ref=e102]
+  - button "Итого к оплате 2 622,00 ₽. Перейти к расчёту." [ref=e246] [cursor=pointer]:
+    - generic [ref=e247]:
+      - generic [ref=e248]: Итого к оплате
+      - generic [ref=e249]: 2 622,00 ₽
+    - generic [ref=e250]: К итогу ↑
+  - status [ref=e103]: "Итого: 2 622,00 ₽"
