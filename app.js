@@ -273,114 +273,8 @@
 
   const isItemExcluded = window.BillCalc.isItemExcluded;
 
-  function compute() {
-    ensurePayers();
-    const people = state.people;
-    const stats = new Map(people.map((p) => [p.id, {
-      id: p.id, name: p.name, subtotal: 0, discount: 0, tax: 0, tip: 0, owed: 0, paid: 0, balance: 0
-    }]));
 
-    if (state.mode === 'equal') {
-      const total = people.length ? state.equalTotal : 0;
-      const shares = splitAmount(total, people.length);
-      people.forEach((p, i) => {
-        const s = stats.get(p.id);
-        s.subtotal = shares[i] || 0;
-        s.owed = s.subtotal;
-        s.paid = p.id === state.equalPayerId ? total : 0;
-        s.balance = s.paid - s.owed;
-      });
-      return { mode: 'equal', people: [...stats.values()], subtotal: total, tax: 0, tip: 0, total, excludedCount: 0 };
-    }
 
-    const included = [];
-    for (const item of state.items) {
-      if (item.amount <= 0) continue;
-      // Resolve participants in global people order, not sharedBy order,
-      // so remainder cents are distributed deterministically.
-      const participants = people.filter((p) => item.sharedBy.includes(p.id));
-      if (participants.length) included.push({ item, participants });
-    }
-    const subtotal = included.reduce((sum, entry) => sum + entry.item.amount, 0);
-    const discount = Math.min(subtotal, Math.round(subtotal * state.discountPct / 100));
-    const discountParts = allocateProportionally(discount, included.map((entry) => entry.item.amount));
-    const netAmounts = included.map((entry, index) => entry.item.amount - discountParts[index]);
-    const taxableSubtotal = subtotal - discount;
-    const tax = Math.round(taxableSubtotal * state.taxPct / 100);
-    const tip = Math.round(taxableSubtotal * state.tipPct / 100);
-    const taxParts = allocateProportionally(tax, netAmounts);
-    const tipParts = allocateProportionally(tip, netAmounts);
-
-    included.forEach((entry, index) => {
-      const item = entry.item;
-      const participants = entry.participants;
-      const amountShares = splitAmount(item.amount, participants.length);
-      const discountShares = splitAmount(discountParts[index], participants.length);
-      const taxShares = splitAmount(taxParts[index], participants.length);
-      const tipShares = splitAmount(tipParts[index], participants.length);
-      participants.forEach((p, i) => {
-        const s = stats.get(p.id);
-        s.subtotal += amountShares[i];
-        s.discount += discountShares[i];
-        s.tax += taxShares[i];
-        s.tip += tipShares[i];
-      });
-      if (item.payerId && stats.has(item.payerId)) {
-        stats.get(item.payerId).paid += netAmounts[index] + taxParts[index] + tipParts[index];
-      }
-    });
-
-    people.forEach((p) => {
-      const s = stats.get(p.id);
-      s.owed = s.subtotal - s.discount + s.tax + s.tip;
-      s.balance = s.paid - s.owed;
-    });
-
-    const excludedCount = state.items.filter(isItemExcluded).length;
-    return {
-      mode: 'itemized', people: [...stats.values()], subtotal, discount, tax, tip,
-      total: taxableSubtotal + tax + tip, excludedCount
-    };
-  }
-
-  function settlements(people) {
-    const debtors = people
-      .filter((p) => p.balance < 0)
-      .map((p) => ({ name: p.name, amount: -p.balance }))
-      .sort((a, b) => b.amount - a.amount || a.name.localeCompare(b.name, 'ru'));
-    const creditors = people
-      .filter((p) => p.balance > 0)
-      .map((p) => ({ name: p.name, amount: p.balance }))
-      .sort((a, b) => b.amount - a.amount || a.name.localeCompare(b.name, 'ru'));
-    const transfers = [];
-    let i = 0;
-    let j = 0;
-    while (i < debtors.length && j < creditors.length) {
-      const amount = Math.min(debtors[i].amount, creditors[j].amount);
-      if (amount > 0) transfers.push({ from: debtors[i].name, to: creditors[j].name, amount });
-      debtors[i].amount -= amount;
-      creditors[j].amount -= amount;
-      if (debtors[i].amount === 0) i += 1;
-      if (creditors[j].amount === 0) j += 1;
-    }
-    return transfers;
-  }
-
-  function ensurePayers() {
-    const ids = new Set(state.people.map((p) => p.id));
-    const first = state.people[0] ? state.people[0].id : null;
-    if (first) {
-      if (!ids.has(state.equalPayerId)) state.equalPayerId = first;
-      if (!ids.has(state.lastItemPayerId)) state.lastItemPayerId = first;
-      for (const item of state.items) {
-        if (!ids.has(item.payerId)) item.payerId = state.lastItemPayerId;
-      }
-    } else {
-      state.equalPayerId = null;
-      state.lastItemPayerId = null;
-      for (const item of state.items) item.payerId = null;
-    }
-  }
 
   let saveTimer = null;
   let liveTimer = null;
@@ -586,7 +480,7 @@
   }
 
   function renderSettlements(people) {
-    const transfers = settlements(people);
+    const transfers = BillCalc.settlements(people);
     el.settleList.innerHTML = transfers.map((t) => `
       <li class="settle-item">
         <span class="settle-flow">${escapeHtml(t.from)} <span class="arrow" aria-hidden="true">→</span> ${escapeHtml(t.to)}</span>
@@ -673,7 +567,7 @@
   }
 
   function updateSummary() {
-    const result = compute();
+    const result = BillCalc.compute(state);
     const count = state.people.length;
     const canExport = count > 0 && hasBillData();
     el.historySave.disabled = !hasBillData();
@@ -741,7 +635,7 @@
   }
 
   function summaryText() {
-    const result = compute();
+    const result = BillCalc.compute(state);
     const lines = ['Расчёт счёта', 'Итого: ' + money(result.total), ''];
     if (result.mode === 'equal') {
       lines.push('Режим: поровну');
@@ -758,7 +652,7 @@
     for (const person of result.people) {
       lines.push(person.name + ' — к оплате ' + money(person.owed) + ', оплачено ' + money(person.paid));
     }
-    const transfers = settlements(result.people);
+    const transfers = BillCalc.settlements(result.people);
     lines.push('', 'Переводы:');
     if (transfers.length) {
       for (const transfer of transfers) {
@@ -770,7 +664,7 @@
     return lines.join('\n');
   }
   function renderAll() {
-    ensurePayers();
+    BillCalc.ensurePayers(state);
     el.currency.value = state.currency;
     el.demoCallout.hidden = hasBillData();
     document.querySelectorAll('.currency-symbol').forEach((node) => {
@@ -1214,7 +1108,7 @@
       name: el.historyName.value.trim().slice(0, MAX_ITEM_NAME) || 'Счёт от ' + dateLabel,
       createdAt: savedAt,
       currency: state.currency,
-      total: compute().total,
+      total: BillCalc.compute(state).total,
       state: JSON.parse(JSON.stringify(state))
     };
     if (persistHistory([record, ...historyRecords].slice(0, HISTORY_LIMIT))) {
@@ -1236,7 +1130,7 @@
     if (hasBillData() && !window.confirm('Открыть сохранённый счёт? Текущие данные будут заменены.')) return;
     state = sanitize(record.state);
     el.demoStatus.textContent = '';
-    ensurePayers();
+    BillCalc.ensurePayers(state);
     saveNow();
     renderAll();
     el.historyDialog.close();
@@ -1274,6 +1168,4 @@
 
   renderAll();
   if (!storageOk) el.storageNotice.hidden = false;
-  window.BillCalc = window.BillCalc || {};
-  window.BillCalc.compute = compute;
 })();

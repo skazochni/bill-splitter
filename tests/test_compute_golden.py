@@ -56,7 +56,7 @@ with sync_playwright() as playwright:
             page.reload()
             page.wait_for_load_state("networkidle")
             page.wait_for_timeout(200)
-            actual = page.evaluate("window.BillCalc.compute()")
+            actual = page.evaluate("window.BillCalc.compute(JSON.parse(localStorage.getItem('billSplitter.v1')))")
             if actual != case["result"]:
                 failures.append(label)
                 print(f"FAIL golden: {label}")
