@@ -323,6 +323,12 @@
     return shares;
   }
 
+  function isItemExcluded(item) {
+    // Позиция исключена из расчёта, если у неё нет участников.
+    // Нулевая сумма — отдельный случай невалидности, а не «исключение».
+    return item.sharedBy.length === 0;
+  }
+
   function compute() {
     ensurePayers();
     const people = state.people;
@@ -386,7 +392,7 @@
       s.balance = s.paid - s.owed;
     });
 
-    const excludedCount = state.items.filter((item) => item.sharedBy.length === 0).length;
+    const excludedCount = state.items.filter(isItemExcluded).length;
     return {
       mode: 'itemized', people: [...stats.values()], subtotal, discount, tax, tip,
       total: taxableSubtotal + tax + tip, excludedCount
@@ -478,7 +484,7 @@
   }
 
   function updateItemsMeta() {
-    const included = state.items.filter((item) => item.sharedBy.length > 0);
+    const included = state.items.filter((item) => !isItemExcluded(item));
     const subtotal = included.reduce((sum, item) => sum + item.amount, 0);
     el.itemSubtotal.textContent = money(subtotal);
     const excluded = state.items.length - included.length;
