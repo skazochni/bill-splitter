@@ -764,7 +764,7 @@
 
     el.grandTotal.textContent = money(result.total);
     el.mobileTotalAmount.textContent = money(result.total);
-    el.mobileTotal.setAttribute('aria-label', 'Итого к оплате ' + money(result.total) + '. К итогу. Перейти к расчёту.');
+    el.mobileTotal.setAttribute('aria-label', 'Итого ' + money(result.total) + '. К итогу. Перейти к расчёту.');
     el.grandSub.textContent = count
       ? peopleWord(count) + (result.mode === 'equal' ? ' · поровну' : ' · ' + itemsWord(state.items.length))
       : 'Добавьте участников';
@@ -780,7 +780,7 @@
       if (state.tipPct > 0 || result.tip > 0) {
         html += `<div class="totals-row"><span>Чаевые · ${formatPercent(state.tipPct)}%</span><span>${money(result.tip)}</span></div>`;
       }
-      html += `<div class="totals-row is-total"><span>Всего</span><span>${money(result.total)}</span></div>`;
+      html += `<div class="totals-row is-total"><span>Итого</span><span>${money(result.total)}</span></div>`;
       if (result.excludedCount > 0) {
         html += `<div class="totals-warning">${result.excludedCount === 1
           ? '1 позиция не учтена'

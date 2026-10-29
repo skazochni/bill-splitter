@@ -181,7 +181,7 @@ with sync_playwright() as playwright:
     page.fill("#tipInput", "5")
     check("discount: grand total after tax and tip", page.inner_text("#grandTotal"), "1 552,50 ₽")
     check("discount: summary includes deduction", page.inner_text("#summaryTotals"),
-          "Позиции\n1 500,00 ₽\nСкидка · 10%\n-150,00 ₽\nНалог · 10%\n135,00 ₽\nЧаевые · 5%\n67,50 ₽\nВсего\n1 552,50 ₽")
+          "Позиции\n1 500,00 ₽\nСкидка · 10%\n-150,00 ₽\nНалог · 10%\n135,00 ₽\nЧаевые · 5%\n67,50 ₽\nИтого\n1 552,50 ₽")
     check("discount: amount owed by participants",
           page.locator("#summaryRows .sum-person-owed").all_inner_texts(), ["1 035,00 ₽", "517,50 ₽"])
     contains("discount: per-person breakdown mentions discount",
