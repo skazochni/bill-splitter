@@ -751,7 +751,7 @@
 
     el.grandTotal.textContent = money(result.total);
     el.mobileTotalAmount.textContent = money(result.total);
-    el.mobileTotal.setAttribute('aria-label', 'Итого к оплате ' + money(result.total) + '. Перейти к расчёту.');
+    el.mobileTotal.setAttribute('aria-label', 'Итого к оплате ' + money(result.total) + '. К итогу. Перейти к расчёту.');
     el.grandSub.textContent = count
       ? peopleWord(count) + (result.mode === 'equal' ? ' · поровну' : ' · ' + itemsWord(state.items.length))
       : 'Добавьте участников';

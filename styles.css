@@ -166,6 +166,7 @@
   .btn {
     display: inline-flex; align-items: center; justify-content: center; gap: 7px;
     border: 1px solid transparent; border-radius: 10px; padding: 10px 15px;
+    min-height: 44px;
     font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap;
     transition: background .15s, border-color .15s, transform .06s;
   }
@@ -212,7 +213,7 @@
   .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
   .chips:empty { display: none; }
   .chip {
-    display: inline-flex; align-items: center; gap: 7px; padding: 4px 4px 4px 5px;
+    display: inline-flex; align-items: center; gap: 7px; padding: 8px 8px 8px 10px;
     border: 1px solid var(--border); border-radius: 999px; background: var(--surface);
     font-size: 13px; font-weight: 500; max-width: 100%;
   }
@@ -220,7 +221,7 @@
     max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
   .chip-remove {
-    display: grid; place-items: center; width: 24px; height: 24px; flex: none;
+    display: grid; place-items: center; min-width: 44px; min-height: 44px; flex: none;
     border: 0; border-radius: 50%; background: transparent; color: var(--muted); cursor: pointer;
   }
   .chip-remove:hover { background: var(--danger-soft); color: var(--danger); }
@@ -261,6 +262,7 @@
   }
   .mode-tab {
     border: 0; background: transparent; color: var(--muted); padding: 8px 16px;
+    min-height: 44px;
     border-radius: 9px; font-size: 13px; font-weight: 600; cursor: pointer;
     transition: background .15s, color .15s;
   }
@@ -299,11 +301,11 @@
     font-size: 14px; font-weight: 600;
   }
   .item-name:hover { background: var(--surface-2); }
-  .item-name:focus { outline: none; background: var(--surface-2); border-color: var(--border-strong); }
+  .item-name:focus { background: var(--surface-2); border-color: var(--border-strong); }
   .item-money { flex: none; width: 142px; }
   .item-money input { text-align: right; font-weight: 600; }
   .icon-btn {
-    width: 32px; height: 32px; flex: none; display: grid; place-items: center;
+    min-width: 44px; min-height: 44px; flex: none; display: grid; place-items: center;
     border: 0; border-radius: 9px; background: transparent; color: var(--muted); cursor: pointer;
   }
   .icon-btn:hover { background: var(--danger-soft); color: var(--danger); }
@@ -322,7 +324,8 @@
   .split-label { font-size: 12px; color: var(--muted); }
   .toggles { display: flex; flex-wrap: wrap; gap: 5px; }
   .person-toggle {
-    display: inline-flex; align-items: center; gap: 5px; padding: 5px 9px;
+    display: inline-flex; align-items: center; gap: 5px; min-height: 44px;
+    padding: 5px 9px;
     border: 1px solid var(--border); border-radius: 999px; background: var(--surface);
     color: var(--muted); font-size: 11px; cursor: pointer; transition: background .15s, border-color .15s, color .15s;
   }
