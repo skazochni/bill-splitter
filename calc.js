@@ -94,6 +94,17 @@
     return item.sharedBy.length === 0;
   }
 
+  function convertCurrencyAmounts(state, oldCurrency, newCurrency) {
+    const oldDigits = CURRENCIES[oldCurrency] ? CURRENCIES[oldCurrency].digits : 2;
+    const newDigits = CURRENCIES[newCurrency] ? CURRENCIES[newCurrency].digits : 2;
+    if (oldDigits === newDigits) return;
+    const factor = 10 ** (newDigits - oldDigits);
+    for (const item of state.items) {
+      item.amount = Math.max(0, Math.round(item.amount * factor));
+    }
+    state.equalTotal = Math.max(0, Math.round(state.equalTotal * factor));
+  }
+
   return {
     CURRENCIES: CURRENCIES,
     num: num,
@@ -107,6 +118,7 @@
     formatPercent: formatPercent,
     splitAmount: splitAmount,
     allocateProportionally: allocateProportionally,
-    isItemExcluded: isItemExcluded
+    isItemExcluded: isItemExcluded,
+    convertCurrencyAmounts: convertCurrencyAmounts
   };
 });

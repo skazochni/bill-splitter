@@ -210,16 +210,6 @@
     return CURRENCIES[state.currency] || CURRENCIES.RUB;
   }
 
-  function convertCurrencyAmounts(oldCurrency, newCurrency) {
-    const oldDigits = CURRENCIES[oldCurrency] ? CURRENCIES[oldCurrency].digits : 2;
-    const newDigits = CURRENCIES[newCurrency] ? CURRENCIES[newCurrency].digits : 2;
-    if (oldDigits === newDigits) return;
-    const factor = 10 ** (newDigits - oldDigits);
-    for (const item of state.items) {
-      item.amount = Math.max(0, Math.round(item.amount * factor));
-    }
-    state.equalTotal = Math.max(0, Math.round(state.equalTotal * factor));
-  }
 
   const formatNumber = window.BillCalc.formatNumber;
 
@@ -1182,7 +1172,7 @@
   el.currency.addEventListener('change', () => {
     const nextCurrency = CURRENCIES[el.currency.value] ? el.currency.value : 'RUB';
     if (nextCurrency !== state.currency) {
-      convertCurrencyAmounts(state.currency, nextCurrency);
+      BillCalc.convertCurrencyAmounts(state, state.currency, nextCurrency);
       state.currency = nextCurrency;
     }
     saveNow();
