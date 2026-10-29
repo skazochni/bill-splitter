@@ -200,6 +200,7 @@
     tipInput: $('tipInput'),
     equalTotal: $('equalTotal'),
     equalPayer: $('equalPayer'),
+    equalPayerHint: $('equalPayerHint'),
     equalNote: $('equalNote'),
     grandTotal: $('grandTotal'),
     grandSub: $('grandSub'),
@@ -612,7 +613,7 @@
       ? state.people.map((p) => `<option value="${escapeHtml(p.id)}"${p.id === state.equalPayerId ? ' selected' : ''}>${escapeHtml(p.name)}</option>`).join('')
       : '<option value="">Нет участников</option>';
     el.equalPayer.disabled = state.people.length === 0;
-    el.equalTotal.disabled = state.people.length === 0;
+    el.equalPayerHint.hidden = state.people.length > 0;
     updateEqualNote();
   }
   function summaryPersonMarkup(person, mode) {

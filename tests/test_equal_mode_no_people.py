@@ -127,7 +127,8 @@ with sync_playwright() as p:
     check("B: участников не осталось", page.inner_text("#peopleCount"), "0")
     check("B: итог при нуле участников", page.inner_text("#grandTotal"), "0,00 ₽")
     check("B: поле суммы очищено", page.input_value("#equalTotal"), "")
-    check("B: поле суммы заблокировано", page.is_disabled("#equalTotal"), True)
+    check("B: поле суммы не заблокировано", page.is_disabled("#equalTotal"), False)
+    check("B: подсказка плательщика видна", page.locator("#equalPayerHint").is_visible(), True)
     check("B: подпись итога", page.inner_text("#grandSub"), "Добавьте участников")
     check("B: объяснение в панели", page.inner_text("#equalNote"), "Сначала добавьте участников — затем сумму счёта.")
     check("B: пустой список участников в сводке", page.is_visible("#summaryEmpty"), True)
@@ -140,7 +141,7 @@ with sync_playwright() as p:
     check("C: режим «Поровну» сохранился", page.is_visible("#equalPanel"), True)
     check("C: итог после перезагрузки", page.inner_text("#grandTotal"), "0,00 ₽")
     check("C: поле суммы после перезагрузки", page.input_value("#equalTotal"), "")
-    check("C: поле суммы по-прежнему заблокировано", page.is_disabled("#equalTotal"), True)
+    check("C: поле суммы не заблокировано", page.is_disabled("#equalTotal"), False)
     check("C: объяснение после перезагрузки", page.inner_text("#equalNote"), "Сначала добавьте участников — затем сумму счёта.")
 
     # ---------- D. повторное добавление участника ----------
@@ -172,7 +173,7 @@ with sync_playwright() as p:
     page.wait_for_load_state("networkidle")
     check("E: старый черновик не показывается как итог", page.inner_text("#grandTotal"), "0,00 ₽")
     check("E: поле суммы пустое", page.input_value("#equalTotal"), "")
-    check("E: поле суммы заблокировано", page.is_disabled("#equalTotal"), True)
+    check("E: поле суммы не заблокировано", page.is_disabled("#equalTotal"), False)
     check("E: объяснение показано", page.inner_text("#equalNote"), "Сначала добавьте участников — затем сумму счёта.")
     context.close()
 
