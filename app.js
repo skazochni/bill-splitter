@@ -4,16 +4,7 @@
   const STORAGE_KEY = 'billSplitter.v1';
   const HISTORY_KEY = 'billSplitter.history.v1';
   const HISTORY_LIMIT = 20;
-  const CURRENCIES = {
-    RUB: { symbol: '₽', digits: 2 },
-    USD: { symbol: '$', digits: 2 },
-    EUR: { symbol: '€', digits: 2 },
-    GBP: { symbol: '£', digits: 2 },
-    KZT: { symbol: '₸', digits: 2 },
-    AMD: { symbol: '֏', digits: 2 },
-    GEL: { symbol: '₾', digits: 2 },
-    JPY: { symbol: '¥', digits: 0 }
-  };
+  const CURRENCIES = window.BillCalc.CURRENCIES;
   const AVATAR_CLASSES = 6;
   const MAX_PEOPLE = 100;
   const MAX_ITEMS = 500;
@@ -48,14 +39,9 @@
     };
   }
 
-  function num(value, fallback) {
-    const n = typeof value === 'number' ? value : Number(value);
-    return Number.isFinite(n) && n >= 0 ? n : fallback;
-  }
+  const num = window.BillCalc.num;
 
-  function intAmount(value) {
-    return Math.max(0, Math.round(num(value, 0)));
-  }
+  const intAmount = window.BillCalc.intAmount;
 
   function sanitize(raw) {
     const out = defaultState();
@@ -235,21 +221,13 @@
     state.equalTotal = Math.max(0, Math.round(state.equalTotal * factor));
   }
 
-  function formatNumber(value, digits) {
-    return new Intl.NumberFormat('ru-RU', {
-      minimumFractionDigits: digits,
-      maximumFractionDigits: digits
-    }).format(value);
-  }
+  const formatNumber = window.BillCalc.formatNumber;
 
   function money(cents) {
     return moneyForCurrency(cents, state.currency);
   }
 
-  function moneyForCurrency(cents, currency) {
-    const c = CURRENCIES[currency] || CURRENCIES.RUB;
-    return formatNumber(cents / 10 ** c.digits, c.digits) + ' ' + c.symbol;
-  }
+  const moneyForCurrency = window.BillCalc.moneyForCurrency;
 
   function moneyRange(a, b) {
     const c = currentCurrency();
@@ -257,35 +235,15 @@
       formatNumber(b / 10 ** c.digits, c.digits) + ' ' + c.symbol;
   }
 
-  function parseMoney(text, digits) {
-    const cleaned = String(text).trim().replace(/[\s\u00A0\u202F]/g, '').replace(',', '.');
-    if (!cleaned) return 0;
-    if (!/^\d*\.?\d*$/.test(cleaned) || cleaned === '.') return null;
-    const value = Number(cleaned);
-    if (!Number.isFinite(value) || value < 0) return null;
-    return Math.round(value * 10 ** digits);
-  }
+  const parseMoney = window.BillCalc.parseMoney;
 
-  function centsToInput(cents, digits) {
-    if (!cents) return '';
-    return (cents / 10 ** digits).toFixed(digits).replace('.', ',');
-  }
+  const centsToInput = window.BillCalc.centsToInput;
 
-  function parsePercent(text) {
-    const cleaned = String(text).trim().replace(/[\s\u00A0\u202F]/g, '').replace(',', '.');
-    if (!cleaned) return 0;
-    if (!/^\d*\.?\d*$/.test(cleaned) || cleaned === '.') return null;
-    const value = Number(cleaned);
-    return Number.isFinite(value) && value >= 0 ? value : null;
-  }
+  const parsePercent = window.BillCalc.parsePercent;
 
-  function percentToInput(pct) {
-    return pct ? String(pct).replace('.', ',') : '';
-  }
+  const percentToInput = window.BillCalc.percentToInput;
 
-  function formatPercent(pct) {
-    return new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 2 }).format(pct);
-  }
+  const formatPercent = window.BillCalc.formatPercent;
 
   function escapeHtml(value) {
     return String(value).replace(/[&<>"']/g, (ch) => ({
@@ -319,30 +277,11 @@
   function itemsWord(n) {
     return n + ' ' + plural(n, 'позиция', 'позиции', 'позиций');
   }
-  function splitAmount(amount, parts) {
-    if (parts <= 0) return [];
-    const base = Math.floor(amount / parts);
-    const remainder = amount - base * parts;
-    return Array.from({ length: parts }, (_, index) => base + (index < remainder ? 1 : 0));
-  }
+  const splitAmount = window.BillCalc.splitAmount;
 
-  function allocateProportionally(total, weights) {
-    const sum = weights.reduce((a, b) => a + b, 0);
-    if (sum <= 0 || total === 0) return weights.map(() => 0);
-    const shares = weights.map((w) => Math.floor((total * w) / sum));
-    const remainder = total - shares.reduce((a, b) => a + b, 0);
-    const order = weights
-      .map((w, index) => ({ index, fraction: (total * w) % sum }))
-      .sort((a, b) => b.fraction - a.fraction || a.index - b.index);
-    for (let i = 0; i < remainder; i += 1) shares[order[i % order.length].index] += 1;
-    return shares;
-  }
+  const allocateProportionally = window.BillCalc.allocateProportionally;
 
-  function isItemExcluded(item) {
-    // Позиция исключена из расчёта, если у неё нет участников.
-    // Нулевая сумма — отдельный случай невалидности, а не «исключение».
-    return item.sharedBy.length === 0;
-  }
+  const isItemExcluded = window.BillCalc.isItemExcluded;
 
   function compute() {
     ensurePayers();
@@ -1345,5 +1284,6 @@
 
   renderAll();
   if (!storageOk) el.storageNotice.hidden = false;
-  window.BillCalc = { compute: compute, splitAmount: splitAmount, allocateProportionally: allocateProportionally, isItemExcluded: isItemExcluded };
+  window.BillCalc = window.BillCalc || {};
+  window.BillCalc.compute = compute;
 })();
