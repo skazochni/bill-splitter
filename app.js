@@ -1345,4 +1345,5 @@
 
   renderAll();
   if (!storageOk) el.storageNotice.hidden = false;
+  window.BillCalc = { compute: compute, splitAmount: splitAmount, allocateProportionally: allocateProportionally, isItemExcluded: isItemExcluded };
 })();
