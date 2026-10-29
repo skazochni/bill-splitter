@@ -110,7 +110,7 @@
     border-radius: 12px; box-shadow: var(--shadow-sm);
   }
   .currency-box > span { font-size: 12px; color: var(--muted); }
-  .currency-note { flex-basis: 100%; color: var(--muted); font-size: 10px; line-height: 1.2; }
+  .currency-note { flex-basis: 100%; color: var(--muted); font-size: 12px; line-height: 1.2; }
   .currency-box select {
     border: 0; background: transparent; color: var(--text);
     font-size: 13px; font-weight: 600; cursor: pointer; max-width: 150px;
@@ -154,7 +154,7 @@
     text-align: right;
   }
   .subtotal-badge span {
-    display: block; font-size: 10px; font-weight: 700; letter-spacing: .08em;
+    display: block; font-size: 12px; font-weight: 700; letter-spacing: .08em;
     text-transform: uppercase;
   }
   .subtotal-badge strong {
@@ -334,7 +334,7 @@
     display: inline-flex; align-items: center; gap: 5px; min-height: 44px;
     padding: 5px 9px;
     border: 1px solid var(--border); border-radius: 999px; background: var(--surface);
-    color: var(--muted); font-size: 11px; cursor: pointer; transition: background .15s, border-color .15s, color .15s;
+    color: var(--muted); font-size: 12px; cursor: pointer; transition: background .15s, border-color .15s, color .15s;
   }
   .person-toggle::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--border-strong); }
   .person-toggle[aria-pressed="true"] {
@@ -364,7 +364,7 @@
   .settings-head .hint { margin-top: 2px; }
   .settings-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 10px; }
   .setting { display: flex; flex-direction: column; gap: 5px; font-size: 12px; color: var(--muted); }
-  .setting-hint { font-size: 11px; }
+  .setting-hint { font-size: 12px; }
   .percent-field { width: 100%; }
   .equal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
   .field { display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: var(--muted); }
@@ -380,7 +380,7 @@
   .summary-card { position: sticky; top: 20px; max-height: calc(100vh - 40px); overflow: auto; scrollbar-width: thin; }
   .summary-head { padding-bottom: 14px; }
   .eyebrow {
-    font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+    font-size: 12px; letter-spacing: .1em; text-transform: uppercase;
     color: var(--muted); font-weight: 700;
   }
   .grand-total {
@@ -412,7 +412,7 @@
   .sum-person-name .avatar { width: 24px; height: 24px; font-size: 10px; }
   .sum-person-name .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .sum-person-owed { font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
-  .sum-breakdown { margin-top: 5px; font-size: 11px; color: var(--muted); line-height: 1.4; }
+  .sum-breakdown { margin-top: 5px; font-size: 12px; color: var(--muted); line-height: 1.4; }
   .sum-balance { display: flex; justify-content: space-between; gap: 8px; margin-top: 7px; font-size: 12px; }
   .sum-paid { color: var(--muted); font-variant-numeric: tabular-nums; }
   .balance { font-weight: 600; font-variant-numeric: tabular-nums; text-align: right; }
@@ -464,7 +464,7 @@
       background: var(--surface); box-shadow: 0 -8px 28px rgba(16, 24, 40, .12);
       text-align: left; cursor: pointer;
     }
-    .mobile-total-label { display: block; color: var(--muted); font-size: 11px; }
+    .mobile-total-label { display: block; color: var(--muted); font-size: 12px; }
     .mobile-total-amount { display: block; margin-top: 1px; font-size: 17px; line-height: 1.2; font-weight: 700; font-variant-numeric: tabular-nums; }
     .mobile-total-action { flex: none; color: var(--accent-strong); font-size: 12px; font-weight: 600; }
   }
