@@ -93,6 +93,10 @@
         <p class="demo-status" id="demoStatus" role="status" aria-live="polite"></p>
         <div class="chips" id="peopleList"></div>
         <p class="hint" id="peopleHint" hidden>Добавьте хотя бы одного участника — без этого расчёт невозможен.</p>
+        <div class="undo-notice" id="personUndo" role="status" hidden>
+          <p>Удалено. Отменить</p>
+          <button class="btn btn-ghost" type="button" id="personUndoCancel">Отменить</button>
+        </div>
       </section>
 
       <div class="mode-tabs" role="tablist" aria-label="Режим деления">
@@ -130,6 +134,10 @@
         </div>
         <ul class="items" id="itemsList"></ul>
         <p class="items-warning" id="itemsExcluded" hidden></p>
+        <div class="undo-notice" id="itemUndo" role="status" hidden>
+          <p>Удалено. Отменить</p>
+          <button class="btn btn-ghost" type="button" id="itemUndoCancel">Отменить</button>
+        </div>
 
         <div class="settings">
           <div class="settings-head">

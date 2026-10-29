@@ -22,8 +22,11 @@
   const MAX_ITEM_NAME = 60;
   const SAVE_DEBOUNCE_MS = 250;
   const LIVE_TOTAL_DELAY_MS = 600;
+  const UNDO_TIMEOUT_MS = 6000;
 
   let storageOk = true;
+  let undoSnapshot = null;
+  let undoTimer = null;
 
   function uid(prefix) {
     return prefix + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
@@ -187,6 +190,10 @@
     itemsEmpty: $('itemsEmpty'),
     itemsEmptyDescription: $('itemsEmptyDescription'),
     itemsExcluded: $('itemsExcluded'),
+    itemUndo: $('itemUndo'),
+    itemUndoCancel: $('itemUndoCancel'),
+    personUndo: $('personUndo'),
+    personUndoCancel: $('personUndoCancel'),
     itemSubtotal: $('itemSubtotal'),
     discountInput: $('discountInput'),
     taxInput: $('taxInput'),
@@ -879,14 +886,71 @@
     return { ok: true };
   }
 
+  function clearUndo() {
+    if (undoTimer) { clearTimeout(undoTimer); undoTimer = null; }
+    undoSnapshot = null;
+  }
+
+  function hideUndoNotice() {
+    el.itemUndo.hidden = true;
+    el.personUndo.hidden = true;
+  }
+
+  function showUndo(kind) {
+    el.itemUndo.hidden = kind !== 'item';
+    el.personUndo.hidden = kind !== 'person';
+  }
+
+  function scheduleUndo(snapshot) {
+    clearUndo();
+    undoSnapshot = snapshot;
+    if (undoTimer) clearTimeout(undoTimer);
+    showUndo(snapshot.kind);
+    undoTimer = setTimeout(() => { undoSnapshot = null; hideUndoNotice(); }, UNDO_TIMEOUT_MS);
+  }
+
+  function restorePerson(snapshot) {
+    state.people.splice(Math.min(snapshot.index, state.people.length), 0, snapshot.person);
+    for (const entry of snapshot.affected) {
+      const item = entry.item;
+      if (entry.hadParticipant) item.sharedBy = [...new Set([...(item.sharedBy || []), snapshot.person.id])];
+      if (entry.wasPayer) item.payerId = snapshot.person.id;
+    }
+    state.equalPayerId = snapshot.equalPayerId;
+    state.lastItemPayerId = snapshot.lastItemPayerId;
+  }
+
+  function undoLastDelete() {
+    const snapshot = undoSnapshot;
+    if (!snapshot) return;
+    clearUndo();
+    hideUndoNotice();
+    if (snapshot.kind === 'item') {
+      state.items.splice(Math.min(snapshot.index, state.items.length), 0, snapshot.item);
+    } else {
+      restorePerson(snapshot);
+    }
+    saveNow();
+    renderAll();
+  }
+
   function removePerson(id) {
     const person = state.people.find((p) => p.id === id);
     if (!person) return;
-    const used = state.items.some((item) => item.payerId === id || item.sharedBy.includes(id)) ||
-      state.equalPayerId === id;
-    if (used && !window.confirm('Удалить участника «' + person.name + '»? Он будет убран из всех позиций и расчётов.')) {
-      return;
-    }
+    const snapshot = {
+      kind: 'person',
+      person: { id: person.id, name: person.name },
+      index: state.people.indexOf(person),
+      equalPayerId: state.equalPayerId,
+      lastItemPayerId: state.lastItemPayerId,
+      affected: state.items
+        .map((item) => ({
+          item,
+          wasPayer: item.payerId === id,
+          hadParticipant: item.sharedBy.includes(id)
+        }))
+        .filter((entry) => entry.wasPayer || entry.hadParticipant)
+    };
     state.people = state.people.filter((p) => p.id !== id);
     for (const item of state.items) {
       item.sharedBy = item.sharedBy.filter((personId) => personId !== id);
@@ -896,6 +960,7 @@
     if (state.lastItemPayerId === id) state.lastItemPayerId = state.people[0] ? state.people[0].id : null;
     // Без участников сумма «поровну» не может быть итогом — очищаем и сохраняем.
     if (!state.people.length) state.equalTotal = 0;
+    scheduleUndo(snapshot);
     saveNow();
     renderAll();
   }
@@ -989,6 +1054,8 @@
     const button = event.target.closest('.chip-remove');
     if (button) removePerson(button.dataset.personId);
   });
+  el.itemUndoCancel.addEventListener('click', undoLastDelete);
+  el.personUndoCancel.addEventListener('click', undoLastDelete);
 
   el.itemForm.addEventListener('submit', (event) => {
     event.preventDefault();
@@ -1110,7 +1177,13 @@
       const card = remove.closest('.item');
       const item = findItem(card.dataset.itemId);
       if (!item) return;
+      const snapshot = {
+        kind: 'item',
+        item: { id: item.id, name: item.name, amount: item.amount, payerId: item.payerId, sharedBy: [...item.sharedBy] },
+        index: state.items.indexOf(item)
+      };
       state.items = state.items.filter((candidate) => candidate.id !== item.id);
+      scheduleUndo(snapshot);
       saveNow();
       renderAll();
     }
@@ -1172,6 +1245,7 @@
   el.reset.addEventListener('click', () => {
     if (!hasBillData()) return;
     if (!window.confirm('Очистить счёт? Все участники и позиции будут удалены.')) return;
+    clearUndo();
     const currency = state.currency;
     const mode = state.mode;
     state = defaultState();
