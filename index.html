@@ -45,6 +45,7 @@
       </label>
       <button class="btn btn-ghost" type="button" id="historyBtn">История · <span id="historyCount">0</span></button>
       <button class="btn btn-ghost" type="button" id="resetBtn">Сбросить</button>
+      <button class="btn btn-ghost" type="button" id="aboutBtn">О приложении</button>
       <div class="theme-switcher">
         <button class="btn btn-ghost btn-icon" type="button" id="themeBtn" aria-haspopup="menu" aria-expanded="false" aria-label="Тема оформления">
           <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
@@ -76,6 +77,29 @@
     <p class="form-error history-error" id="historyError" role="alert" hidden></p>
     <p class="empty small" id="historyEmpty">Сохранённых счетов пока нет.</p>
     <ul class="history-list" id="historyList"></ul>
+  </dialog>
+
+  <dialog class="history-dialog about-dialog" id="aboutDialog" aria-labelledby="aboutTitle">
+    <div class="panel-head history-dialog-head">
+      <div>
+        <h2 id="aboutTitle">О приложении</h2>
+        <p class="panel-sub">Bill Splitter — разделить счёт</p>
+      </div>
+      <button class="btn btn-ghost" type="button" id="aboutClose">Закрыть</button>
+    </div>
+    <div class="about-body">
+      <p>Приложение помогает разделить счёт: по позициям или поровну, со скидкой, налогом и чаевыми, в нескольких валютах. Работает без интернета.</p>
+      <p>Данные хранятся только на вашем устройстве (в браузере), сетевых запросов с данными нет.</p>
+      <h3>Установка</h3>
+      <ul class="about-list">
+        <li><strong>Chrome (Android):</strong> меню → «Установить приложение».</li>
+        <li><strong>Samsung Internet:</strong> меню → «Добавить страницу в» → «Главный экран».</li>
+        <li><strong>Firefox:</strong> меню → «Установить».</li>
+        <li><strong>Edge:</strong> меню → «Добавить на телефон».</li>
+        <li><strong>Другие браузеры:</strong> меню → «Добавить на главный экран».</li>
+        <li><strong>iPhone (Safari):</strong> «Поделиться» → «На экран «Домой»».</li>
+      </ul>
+    </div>
   </dialog>
 
   <div class="notice" id="storageNotice" role="status" hidden>
@@ -176,10 +200,14 @@
               </div>
             </div>
             <div class="setting">
-              <label for="tipInput">Чаевые, %</label>
+              <label for="tipInput">Чаевые</label>
+              <div class="mode-tabs tip-mode" role="tablist" aria-label="Режим чаевых">
+                <button type="button" class="mode-tab tip-mode-tab" data-tip-mode="percent" aria-selected="true">%</button>
+                <button type="button" class="mode-tab tip-mode-tab" data-tip-mode="amount" aria-selected="false" id="tipModeAmountBtn">₽</button>
+              </div>
               <div class="money-field percent-field">
                 <input id="tipInput" type="text" inputmode="decimal" placeholder="0" autocomplete="off">
-                <span>%</span>
+                <span id="tipUnit">%</span>
               </div>
             </div>
           </div>

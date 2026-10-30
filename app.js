@@ -37,6 +37,8 @@
       items: [],
       taxPct: 0,
       tipPct: 0,
+      tipMode: 'percent',
+      tipAmount: 0,
       discountPct: 0,
       equalTotal: 0,
       equalPayerId: null,
@@ -55,6 +57,8 @@
     if (raw.mode === 'equal') out.mode = 'equal';
     out.taxPct = num(raw.taxPct, 0);
     out.tipPct = num(raw.tipPct, 0);
+    out.tipMode = raw.tipMode === 'amount' ? 'amount' : 'percent';
+    out.tipAmount = intAmount(raw.tipAmount);
     out.discountPct = Math.min(100, num(raw.discountPct, 0));
     out.equalTotal = intAmount(raw.equalTotal);
 
@@ -153,6 +157,9 @@
     themeBtn: $('themeBtn'),
     themeMenu: $('themeMenu'),
     historyBtn: $('historyBtn'),
+    aboutBtn: $('aboutBtn'),
+    aboutDialog: $('aboutDialog'),
+    aboutClose: $('aboutClose'),
     historyCount: $('historyCount'),
     historyDialog: $('historyDialog'),
     historyClose: $('historyClose'),
@@ -171,7 +178,7 @@
     peopleList: $('peopleList'),
     peopleHint: $('peopleHint'),
     peopleCount: $('peopleCount'),
-    tabs: Array.from(document.querySelectorAll('.mode-tab')),
+    tabs: Array.from(document.querySelectorAll('.mode-tab:not(.tip-mode-tab)')),
     itemizedPanel: $('itemizedPanel'),
     equalPanel: $('equalPanel'),
     itemForm: $('itemForm'),
@@ -191,6 +198,8 @@
     discountInput: $('discountInput'),
     taxInput: $('taxInput'),
     tipInput: $('tipInput'),
+    tipUnit: $('tipUnit'),
+    tipModeAmountBtn: $('tipModeAmountBtn'),
     equalTotal: $('equalTotal'),
     equalPayer: $('equalPayer'),
     equalPayerHint: $('equalPayerHint'),
@@ -459,7 +468,7 @@
           person.tax ? 'налог ' + money(person.tax) : '',
           person.tip ? 'чаевые ' + money(person.tip) : ''
         ].filter(Boolean).join(' · ')
-      : 'доля счёта ' + money(person.subtotal);
+      : 'доля счёта ' + money(person.subtotal) + (person.tip ? ' · чаевые ' + money(person.tip) : '');
     let balanceText = 'в расчёте';
     let balanceClass = 'is-neutral';
     if (person.balance > 0) {
@@ -607,8 +616,12 @@
       if (state.taxPct > 0 || result.tax > 0) {
         html += `<div class="totals-row"><span>Налог · ${formatPercent(state.taxPct)}%</span><span>${money(result.tax)}</span></div>`;
       }
-      if (state.tipPct > 0 || result.tip > 0) {
-        html += `<div class="totals-row"><span>Чаевые · ${formatPercent(state.tipPct)}%</span><span>${money(result.tip)}</span></div>`;
+      const hasTip = state.tipMode === 'amount' ? (state.tipAmount > 0) : (state.tipPct > 0 || result.tip > 0);
+      const tipLabel = state.tipMode === 'amount'
+        ? 'Чаевые · ' + money(state.tipAmount)
+        : 'Чаевые · ' + formatPercent(state.tipPct) + '%';
+      if (hasTip) {
+        html += `<div class="totals-row"><span>${tipLabel}</span><span>${money(result.tip)}</span></div>`;
       }
       html += `<div class="totals-row is-total"><span>Итого</span><span>${money(result.total)}</span></div>`;
       if (result.excludedCount > 0) {
@@ -650,7 +663,10 @@
       lines.push('Позиции: ' + money(result.subtotal));
       if (result.discount > 0) lines.push('Скидка: −' + money(result.discount));
       if (result.tax > 0) lines.push('Налог: ' + money(result.tax));
-      if (result.tip > 0) lines.push('Чаевые: ' + money(result.tip));
+      if (result.tip > 0) {
+      if (state.tipMode === 'amount') lines.push('Чаевые: ' + money(result.tip));
+      else lines.push('Чаевые: ' + formatPercent(state.tipPct) + '%');
+    }
       if (result.excludedCount > 0) {
         lines.push('Не учтено позиций: ' + result.excludedCount + ' (не выбраны участники)');
       }
@@ -683,7 +699,8 @@
     renderEqual();
     el.discountInput.value = percentToInput(state.discountPct);
     el.taxInput.value = percentToInput(state.taxPct);
-    el.tipInput.value = percentToInput(state.tipPct);
+    renderTipUI();
+    if (el.tipModeAmountBtn) el.tipModeAmountBtn.textContent = currentCurrency().symbol;
     const c = currentCurrency();
     el.itemAmount.placeholder = c.digits ? '0,' + '0'.repeat(c.digits) : '0';
     el.itemSubmit.disabled = false;
@@ -1130,6 +1147,58 @@
     }
   });
 
+  function tipMode() { return state.tipMode === 'amount' ? 'amount' : 'percent'; }
+
+  function setTipMode(mode) {
+    state.tipMode = (mode === 'amount') ? 'amount' : 'percent';
+    if (state.tipMode === 'amount' && !state.tipAmount) state.tipAmount = 0;
+    saveNow();
+    renderTipUI();
+    updateSummary();
+  }
+
+  function renderTipUI() {
+    const mode = tipMode();
+    document.querySelectorAll('.tip-mode-tab').forEach((btn) => {
+      btn.setAttribute('aria-selected', String(btn.dataset.tipMode === mode));
+    });
+    if (el.tipUnit) el.tipUnit.textContent = (mode === 'amount') ? (currentCurrency().symbol) : '%';
+    if (el.tipModeAmountBtn) el.tipModeAmountBtn.textContent = currentCurrency().symbol;
+    if (mode === 'percent') {
+      el.tipInput.value = percentToInput(state.tipPct);
+      el.tipInput.placeholder = '0';
+    } else {
+      el.tipInput.value = centsToInput(state.tipAmount, currentCurrency().digits);
+      const c = currentCurrency();
+      el.tipInput.placeholder = c.digits ? '0,' + '0'.repeat(c.digits) : '0';
+    }
+  }
+
+  function setupTipInput() {
+    el.tipInput.addEventListener('input', () => {
+      if (tipMode() === 'percent') {
+        const value = parsePercent(el.tipInput.value);
+        if (value === null) { el.tipInput.setAttribute('aria-invalid', 'true'); return; }
+        el.tipInput.removeAttribute('aria-invalid');
+        state.tipPct = value;
+      } else {
+        const amount = parseMoney(el.tipInput.value, currentCurrency().digits);
+        if (amount === null) { el.tipInput.setAttribute('aria-invalid', 'true'); return; }
+        el.tipInput.removeAttribute('aria-invalid');
+        state.tipAmount = amount;
+      }
+      scheduleSave();
+      updateSummary();
+    });
+    el.tipInput.addEventListener('blur', () => {
+      renderTipUI();
+      el.tipInput.removeAttribute('aria-invalid');
+    });
+    document.querySelectorAll('.tip-mode-tab').forEach((btn) => {
+      btn.addEventListener('click', () => setTipMode(btn.dataset.tipMode));
+    });
+  }
+
   function bindPercentInput(input, key, maximum = Infinity) {
     input.addEventListener('input', () => {
       const value = parsePercent(input.value);
@@ -1149,7 +1218,7 @@
   }
   bindPercentInput(el.discountInput, 'discountPct', 100);
   bindPercentInput(el.taxInput, 'taxPct');
-  bindPercentInput(el.tipInput, 'tipPct');
+  setupTipInput();
 
   el.equalTotal.addEventListener('input', () => {
     const value = parseMoney(el.equalTotal.value, currentCurrency().digits);
@@ -1182,6 +1251,7 @@
     }
     saveNow();
     renderAll();
+    if (el.tipModeAmountBtn) el.tipModeAmountBtn.textContent = currentCurrency().symbol;
   });
   el.reset.addEventListener('click', () => {
     if (!hasBillData()) return;
@@ -1203,6 +1273,9 @@
     el.historyDialog.showModal();
   });
   el.historyClose.addEventListener('click', () => el.historyDialog.close());
+  el.aboutBtn.addEventListener('click', () => { el.aboutDialog.showModal(); });
+  el.aboutClose.addEventListener('click', () => el.aboutDialog.close());
+  el.aboutDialog.addEventListener('close', () => { el.aboutBtn.focus(); });
   el.historyDialog.addEventListener('close', () => {
     el.historyName.value = '';
     el.historyError.hidden = true;
