@@ -1,3 +1,6 @@
 .venv/
+.opencode/
+.impeccable/
 __pycache__/
 *.py[cod]
+node_modules/
