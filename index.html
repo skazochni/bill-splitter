@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#0f766e">
 <meta name="color-scheme" content="light dark">
+<script>
+(function(){try{var t=localStorage.getItem('billSplitter.theme.v1');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+</script>
 <title>Bill Splitter — разделить счёт</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%230f766e'/%3E%3Cpath d='M6 3h12v18l-3-2-3 2-3-2-3 2V3Z' fill='none' stroke='%23fff' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M9 8h6M9 12h6' stroke='%23fff' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E">
@@ -42,6 +45,16 @@
       </label>
       <button class="btn btn-ghost" type="button" id="historyBtn">История · <span id="historyCount">0</span></button>
       <button class="btn btn-ghost" type="button" id="resetBtn">Сбросить</button>
+      <div class="theme-switcher">
+        <button class="btn btn-ghost btn-icon" type="button" id="themeBtn" aria-haspopup="menu" aria-expanded="false" aria-label="Тема оформления">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        </button>
+        <div class="theme-menu" id="themeMenu" role="menu" hidden>
+          <button type="button" class="theme-menu-item" role="menuitemradio" data-theme-choice="system" aria-checked="true">Системная</button>
+          <button type="button" class="theme-menu-item" role="menuitemradio" data-theme-choice="light" aria-checked="false">Светлая</button>
+          <button type="button" class="theme-menu-item" role="menuitemradio" data-theme-choice="dark" aria-checked="false">Тёмная</button>
+        </div>
+      </div>
     </div>
   </header>
 

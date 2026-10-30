@@ -18,6 +18,7 @@
   const SAVE_DEBOUNCE_MS = 250;
   const LIVE_TOTAL_DELAY_MS = 600;
   const UNDO_TIMEOUT_MS = 6000;
+  const THEME_KEY = 'billSplitter.theme.v1';
 
   let storageOk = true;
   let undoSnapshot = null;
@@ -149,6 +150,8 @@
   const el = {
     currency: $('currencySelect'),
     reset: $('resetBtn'),
+    themeBtn: $('themeBtn'),
+    themeMenu: $('themeMenu'),
     historyBtn: $('historyBtn'),
     historyCount: $('historyCount'),
     historyDialog: $('historyDialog'),
@@ -821,6 +824,110 @@
     el.itemError.hidden = true;
     el.itemAmount.removeAttribute('aria-describedby');
   }
+  function effectiveTheme() {
+    const forced = document.documentElement.getAttribute('data-theme');
+    if (forced === 'light' || forced === 'dark') return forced;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+
+  function updateThemeMeta() {
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', effectiveTheme() === 'dark' ? '#0e1116' : '#0f766e');
+  }
+
+  function loadThemeChoice() {
+    try { return localStorage.getItem(THEME_KEY) || 'system'; } catch { return 'system'; }
+  }
+
+  function applyThemeChoice(choice) {
+    const root = document.documentElement;
+    if (choice === 'light' || choice === 'dark') {
+      root.setAttribute('data-theme', choice);
+    } else {
+      root.removeAttribute('data-theme');
+    }
+    try { localStorage.setItem(THEME_KEY, choice); } catch { }
+    updateThemeMeta();
+    updateThemeMenuChecked(choice);
+  }
+
+  function updateThemeMenuChecked(choice) {
+    document.querySelectorAll('.theme-menu-item').forEach((btn) => {
+      btn.setAttribute('aria-checked', String(btn.dataset.themeChoice === choice));
+    });
+  }
+
+  function closeThemeMenu(returnFocus) {
+    const menu = el.themeMenu;
+    const btn = el.themeBtn;
+    if (!menu || !btn) return;
+    menu.hidden = true;
+    btn.setAttribute('aria-expanded', 'false');
+    if (returnFocus) btn.focus();
+  }
+
+  function openThemeMenu() {
+    const menu = el.themeMenu;
+    const btn = el.themeBtn;
+    if (!menu || !btn) return;
+    menu.hidden = false;
+    btn.setAttribute('aria-expanded', 'true');
+    const current = loadThemeChoice();
+    const items = Array.from(menu.querySelectorAll('.theme-menu-item'));
+    const target = items.find((b) => b.dataset.themeChoice === current) || items[0];
+    if (target) target.focus();
+  }
+
+  function initTheme() {
+    const choice = loadThemeChoice();
+    applyThemeChoice(choice);
+    const btn = el.themeBtn;
+    const menu = el.themeMenu;
+    if (!btn || !menu) return;
+    btn.addEventListener('click', () => {
+      if (menu.hidden) openThemeMenu(); else closeThemeMenu(false);
+    });
+    menu.addEventListener('click', (event) => {
+      const item = event.target.closest('.theme-menu-item');
+      if (!item) return;
+      applyThemeChoice(item.dataset.themeChoice);
+      closeThemeMenu(true);
+    });
+    menu.addEventListener('keydown', (event) => {
+      const items = Array.from(menu.querySelectorAll('.theme-menu-item'));
+      const idx = items.indexOf(document.activeElement);
+      if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        const next = items[(idx + 1) % items.length];
+        if (next) next.focus();
+      } else if (event.key === 'ArrowUp') {
+        event.preventDefault();
+        const prev = items[(idx - 1 + items.length) % items.length];
+        if (prev) prev.focus();
+      } else if (event.key === 'Home') {
+        event.preventDefault();
+        if (items[0]) items[0].focus();
+      } else if (event.key === 'End') {
+        event.preventDefault();
+        if (items[items.length - 1]) items[items.length - 1].focus();
+      } else if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        const item = document.activeElement && document.activeElement.closest('.theme-menu-item');
+        if (item) { applyThemeChoice(item.dataset.themeChoice); closeThemeMenu(true); }
+      } else if (event.key === 'Escape') {
+        event.preventDefault();
+        closeThemeMenu(true);
+      }
+    });
+    document.addEventListener('click', (event) => {
+      if (menu.hidden) return;
+      if (event.target.closest('.theme-switcher')) return;
+      closeThemeMenu(false);
+    });
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    mq.addEventListener('change', () => { if (loadThemeChoice() === 'system') updateThemeMeta(); });
+  }
+
   el.personForm.addEventListener('submit', (event) => {
     event.preventDefault();
     const result = addPerson(el.personName.value);
@@ -1172,6 +1279,7 @@
 
   registerServiceWorker();
 
+  initTheme();
   renderAll();
   if (!storageOk) el.storageNotice.hidden = false;
 
