@@ -14,6 +14,7 @@
 - Установка браузеров Playwright при необходимости: `.venv\Scripts\python.exe -m playwright install`.
 - Юнит-тесты расчётов (Node, без зависимостей): `node --test "tests/js/*.js"`.
 - PWA: при изменении любого файла из precache (index.html, styles.css, calc.js, app.js, manifest.webmanifest, иконки) увеличить `CACHE_VERSION` в `sw.js`.
+- Адрес публикации (GitHub Pages): <заполнить после создания репозитория>.
 
 ## Архитектурные заметки (важное)
 - **«Поровну» без участников**: в `compute()` для режима `equal` итог = 0 при `people.length===0`. При удалении последнего участника в `removePerson()` `equalTotal` обнуляется и сохраняется. В `sanitize()` при загрузке из localStorage сумма «поровну» обнуляется, если нет участников — защита от старых сохранений. Не менять это поведение без регрессионных тестов.
