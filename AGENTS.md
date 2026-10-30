@@ -12,7 +12,8 @@
 - Тесты браузером (Playwright): `.venv\Scripts\python.exe tests\test_equal_mode_no_people.py`, `.venv\Scripts\python.exe tests\test_mvp_scenarios.py`, `.venv\Scripts\python.exe tests\test_summary_export.py` и `.venv\Scripts\python.exe tests\test_currency_and_item_rounding.py` (каждый сам поднимает сервер). Требуется Playwright в `.venv` и браузер. В окружении есть Edge; тесты пытаются использовать `channel="msedge"`, при неудаче падают на `chromium`.
 - Ручная проверка через skill `webapp-testing`: поднимать сервер `python -m http.server` + запускать Playwright-скрипт из `.venv\Scripts\python.exe` (см. `.opencode/skills/webapp-testing/`).
 - Установка браузеров Playwright при необходимости: `.venv\Scripts\python.exe -m playwright install`.
-- Юнит-тесты расчётов (Node, без зависимостей): `node --test tests/js/`.
+- Юнит-тесты расчётов (Node, без зависимостей): `node --test "tests/js/*.js"`.
+- PWA: при изменении любого файла из precache (index.html, styles.css, calc.js, app.js, manifest.webmanifest, иконки) увеличить `CACHE_VERSION` в `sw.js`.
 
 ## Архитектурные заметки (важное)
 - **«Поровну» без участников**: в `compute()` для режима `equal` итог = 0 при `people.length===0`. При удалении последнего участника в `removePerson()` `equalTotal` обнуляется и сохраняется. В `sanitize()` при загрузке из localStorage сумма «поровну» обнуляется, если нет участников — защита от старых сохранений. Не менять это поведение без регрессионных тестов.
