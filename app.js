@@ -1170,6 +1170,20 @@
     if (document.visibilityState === 'hidden' && saveTimer) saveNow();
   });
 
+  registerServiceWorker();
+
   renderAll();
   if (!storageOk) el.storageNotice.hidden = false;
+
+  function registerServiceWorker() {
+    if (!('serviceWorker' in navigator)) return;
+    if (location.protocol === 'file:') return;
+    try {
+      navigator.serviceWorker.register('./sw.js').catch((err) => {
+        console.error('Service worker registration failed:', err);
+      });
+    } catch (err) {
+      console.error('Service worker registration failed:', err);
+    }
+  }
 })();
