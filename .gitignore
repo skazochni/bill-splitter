@@ -1,6 +1,8 @@
 .venv/
 .opencode/
 .impeccable/
+.playwright-mcp/
 __pycache__/
 *.py[cod]
 node_modules/
+@AutomationLog.txt
