@@ -53,7 +53,7 @@ test('isItemExcluded: with participant -> not excluded (even zero amount)', () =
   assert.equal(BillCalc.isItemExcluded({ sharedBy: ['p1'] }), false);
 });
 
-test('parseMoney/centsToInput: JPY (0 digits)', () => {
+test('parseMoney/centsToInput: AMD (0 digits)', () => {
   assert.equal(BillCalc.parseMoney('100', 0), 100);
   assert.equal(BillCalc.centsToInput(100, 0), '100');
 });
@@ -96,20 +96,20 @@ test('settlements: no transfers when balanced', () => {
   assert.deepStrictEqual(BillCalc.settlements(people), []);
 });
 
-// 5. convertCurrencyAmounts: 2 digits -> JPY -> back, no NaN
-test('convertCurrencyAmounts: round-trip RUB->JPY->RUB', () => {
+// 5. convertCurrencyAmounts: 2 digits -> AMD -> back, no NaN
+test('convertCurrencyAmounts: round-trip RUB->AMD->RUB', () => {
   const st = {
     items: [{ id: 'i1', name: 'X', amount: 1000, payerId: 'p1', sharedBy: ['p1'] }],
     equalTotal: 2000,
   };
   const copy1 = JSON.parse(JSON.stringify(st));
-  BillCalc.convertCurrencyAmounts(copy1, 'RUB', 'JPY');
+  BillCalc.convertCurrencyAmounts(copy1, 'RUB', 'AMD');
   assert.ok(Number.isFinite(copy1.items[0].amount));
   assert.ok(Number.isFinite(copy1.equalTotal));
   assert.equal(copy1.items[0].amount, 10);
   assert.equal(copy1.equalTotal, 20);
   const copy2 = JSON.parse(JSON.stringify(copy1));
-  BillCalc.convertCurrencyAmounts(copy2, 'JPY', 'RUB');
+  BillCalc.convertCurrencyAmounts(copy2, 'AMD', 'RUB');
   assert.ok(Number.isFinite(copy2.items[0].amount));
   assert.ok(Number.isFinite(copy2.equalTotal));
   assert.equal(copy2.items[0].amount, st.items[0].amount);

@@ -76,9 +76,9 @@ with sync_playwright() as playwright:
           page.locator("#currencyNote").inner_text(), "Курс не применяется при смене валюты")
     check("currency: same precision keeps entered numeric amount",
           page.locator("#grandTotal").inner_text(), "1 050,25 $")
-    page.locator("#currencySelect").select_option("JPY")
+    page.locator("#currencySelect").select_option("AMD")
     check("currency: zero-decimal currency rounds to whole units",
-          page.locator("#grandTotal").inner_text(), "1 050 ¥")
+          page.locator("#grandTotal").inner_text(), "1 050 ֏")
 
     context.close()
     browser.close()

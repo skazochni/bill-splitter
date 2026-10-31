@@ -54,6 +54,7 @@
     const out = defaultState();
     if (!raw || typeof raw !== 'object') return out;
     if (CURRENCIES[raw.currency]) out.currency = raw.currency;
+    const legacyCurrency = (typeof raw.currency === 'string' && raw.currency && !CURRENCIES[raw.currency]) ? raw.currency : null;
     if (raw.mode === 'equal') out.mode = 'equal';
     out.taxPct = num(raw.taxPct, 0);
     out.tipPct = num(raw.tipPct, 0);
@@ -96,6 +97,10 @@
     for (const item of out.items) {
       if (!item.payerId) item.payerId = firstId;
     }
+    if (legacyCurrency) {
+      BillCalc.convertCurrencyAmounts(out, legacyCurrency, 'RUB');
+      out.currency = 'RUB';
+    }
     return out;
   }
 
@@ -130,7 +135,10 @@
       return entries.slice(0, HISTORY_LIMIT).filter((entry) =>
         entry && typeof entry === 'object' && entry.state && typeof entry.state === 'object'
       ).map((entry) => {
-        const currency = CURRENCIES[entry.currency] ? entry.currency : 'RUB';
+        const oldCurrency = typeof entry.currency === 'string' ? entry.currency : 'RUB';
+        const isLegacy = !CURRENCIES[oldCurrency];
+        const currency = isLegacy ? 'RUB' : oldCurrency;
+        const sanitizedState = sanitize(entry.state);
         const createdAt = typeof entry.createdAt === 'string' && Number.isFinite(Date.parse(entry.createdAt))
           ? entry.createdAt
           : new Date(0).toISOString();
@@ -139,8 +147,8 @@
           name: String(entry.name || 'Счёт').trim().slice(0, MAX_ITEM_NAME) || 'Счёт',
           createdAt,
           currency,
-          total: intAmount(entry.total),
-          state: sanitize(entry.state)
+          total: BillCalc.compute(sanitizedState).total,
+          state: sanitizedState
         };
       });
     } catch {

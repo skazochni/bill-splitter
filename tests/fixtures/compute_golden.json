@@ -485,74 +485,6 @@
       "excludedCount": 0
     }
   },
-  "jpy_itemized": {
-    "input": {
-      "version": 1,
-      "mode": "itemized",
-      "currency": "JPY",
-      "people": [
-        {
-          "id": "p1",
-          "name": "Анна"
-        },
-        {
-          "id": "p2",
-          "name": "Борис"
-        }
-      ],
-      "items": [
-        {
-          "id": "i1",
-          "name": "Пицца",
-          "amount": 1000,
-          "payerId": "p1",
-          "sharedBy": [
-            "p1",
-            "p2"
-          ]
-        }
-      ],
-      "taxPct": 0,
-      "tipPct": 0,
-      "discountPct": 0,
-      "equalTotal": 0,
-      "equalPayerId": null,
-      "lastItemPayerId": "p1"
-    },
-    "result": {
-      "mode": "itemized",
-      "people": [
-        {
-          "id": "p1",
-          "name": "Анна",
-          "subtotal": 500,
-          "discount": 0,
-          "tax": 0,
-          "tip": 0,
-          "owed": 500,
-          "paid": 1000,
-          "balance": 500
-        },
-        {
-          "id": "p2",
-          "name": "Борис",
-          "subtotal": 500,
-          "discount": 0,
-          "tax": 0,
-          "tip": 0,
-          "owed": 500,
-          "paid": 0,
-          "balance": -500
-        }
-      ],
-      "subtotal": 1000,
-      "discount": 0,
-      "tax": 0,
-      "tip": 0,
-      "total": 1000,
-      "excludedCount": 0
-    }
-  },
   "no_participants_itemized": {
     "input": {
       "version": 1,
@@ -654,62 +586,6 @@
       "tax": 0,
       "tip": 0,
       "total": 1000,
-      "excludedCount": 0
-    }
-  },
-  "equal_jpy": {
-    "input": {
-      "version": 1,
-      "mode": "equal",
-      "currency": "JPY",
-      "people": [
-        {
-          "id": "p1",
-          "name": "Анна"
-        },
-        {
-          "id": "p2",
-          "name": "Борис"
-        }
-      ],
-      "items": [],
-      "taxPct": 0,
-      "tipPct": 0,
-      "discountPct": 0,
-      "equalTotal": 1001,
-      "equalPayerId": "p1",
-      "lastItemPayerId": "p1"
-    },
-    "result": {
-      "mode": "equal",
-      "people": [
-        {
-          "id": "p1",
-          "name": "Анна",
-          "subtotal": 501,
-          "discount": 0,
-          "tax": 0,
-          "tip": 0,
-          "owed": 501,
-          "paid": 1001,
-          "balance": 500
-        },
-        {
-          "id": "p2",
-          "name": "Борис",
-          "subtotal": 500,
-          "discount": 0,
-          "tax": 0,
-          "tip": 0,
-          "owed": 500,
-          "paid": 0,
-          "balance": -500
-        }
-      ],
-      "subtotal": 1001,
-      "tax": 0,
-      "tip": 0,
-      "total": 1001,
       "excludedCount": 0
     }
   },
@@ -1055,11 +931,170 @@
       "excludedCount": 0
     }
   },
-  "equal_tip_jpy": {
+  "tip_no_participants": {
+    "input": {
+      "version": 1,
+      "mode": "itemized",
+      "currency": "RUB",
+      "people": [],
+      "items": [
+        {
+          "id": "i1",
+          "name": "Пицца",
+          "amount": 50000,
+          "payerId": null,
+          "sharedBy": []
+        }
+      ],
+      "taxPct": 0,
+      "tipPct": 0,
+      "tipMode": "amount",
+      "tipAmount": 5000,
+      "discountPct": 0,
+      "equalTotal": 0,
+      "equalPayerId": null,
+      "lastItemPayerId": null
+    },
+    "result": {
+      "mode": "itemized",
+      "people": [],
+      "subtotal": 0,
+      "discount": 0,
+      "tax": 0,
+      "tip": 5000,
+      "total": 5000,
+      "excludedCount": 1
+    }
+  },
+  "amd_itemized": {
+    "input": {
+      "version": 1,
+      "mode": "itemized",
+      "currency": "AMD",
+      "people": [
+        {
+          "id": "p1",
+          "name": "Анна"
+        },
+        {
+          "id": "p2",
+          "name": "Борис"
+        }
+      ],
+      "items": [
+        {
+          "id": "i1",
+          "name": "Пицца",
+          "amount": 1000,
+          "payerId": "p1",
+          "sharedBy": [
+            "p1",
+            "p2"
+          ]
+        }
+      ],
+      "taxPct": 0,
+      "tipPct": 0,
+      "discountPct": 0,
+      "equalTotal": 0,
+      "equalPayerId": null,
+      "lastItemPayerId": "p1"
+    },
+    "result": {
+      "mode": "itemized",
+      "people": [
+        {
+          "id": "p1",
+          "name": "Анна",
+          "subtotal": 500,
+          "discount": 0,
+          "tax": 0,
+          "tip": 0,
+          "owed": 500,
+          "paid": 1000,
+          "balance": 500
+        },
+        {
+          "id": "p2",
+          "name": "Борис",
+          "subtotal": 500,
+          "discount": 0,
+          "tax": 0,
+          "tip": 0,
+          "owed": 500,
+          "paid": 0,
+          "balance": -500
+        }
+      ],
+      "subtotal": 1000,
+      "discount": 0,
+      "tax": 0,
+      "tip": 0,
+      "total": 1000,
+      "excludedCount": 0
+    }
+  },
+  "equal_amd": {
     "input": {
       "version": 1,
       "mode": "equal",
-      "currency": "JPY",
+      "currency": "AMD",
+      "people": [
+        {
+          "id": "p1",
+          "name": "Анна"
+        },
+        {
+          "id": "p2",
+          "name": "Борис"
+        }
+      ],
+      "items": [],
+      "taxPct": 0,
+      "tipPct": 0,
+      "discountPct": 0,
+      "equalTotal": 1001,
+      "equalPayerId": "p1",
+      "lastItemPayerId": "p1"
+    },
+    "result": {
+      "mode": "equal",
+      "people": [
+        {
+          "id": "p1",
+          "name": "Анна",
+          "subtotal": 501,
+          "discount": 0,
+          "tax": 0,
+          "tip": 0,
+          "owed": 501,
+          "paid": 1001,
+          "balance": 500
+        },
+        {
+          "id": "p2",
+          "name": "Борис",
+          "subtotal": 500,
+          "discount": 0,
+          "tax": 0,
+          "tip": 0,
+          "owed": 500,
+          "paid": 0,
+          "balance": -500
+        }
+      ],
+      "subtotal": 1001,
+      "tax": 0,
+      "tip": 0,
+      "total": 1001,
+      "excludedCount": 0
+    }
+  },
+  "equal_tip_amd": {
+    "input": {
+      "version": 1,
+      "mode": "equal",
+      "currency": "AMD",
       "people": [
         {
           "id": "p1",
@@ -1111,41 +1146,6 @@
       "tip": 100,
       "total": 1100,
       "excludedCount": 0
-    }
-  },
-  "tip_no_participants": {
-    "input": {
-      "version": 1,
-      "mode": "itemized",
-      "currency": "RUB",
-      "people": [],
-      "items": [
-        {
-          "id": "i1",
-          "name": "Пицца",
-          "amount": 50000,
-          "payerId": null,
-          "sharedBy": []
-        }
-      ],
-      "taxPct": 0,
-      "tipPct": 0,
-      "tipMode": "amount",
-      "tipAmount": 5000,
-      "discountPct": 0,
-      "equalTotal": 0,
-      "equalPayerId": null,
-      "lastItemPayerId": null
-    },
-    "result": {
-      "mode": "itemized",
-      "people": [],
-      "subtotal": 0,
-      "discount": 0,
-      "tax": 0,
-      "tip": 5000,
-      "total": 5000,
-      "excludedCount": 1
     }
   }
 }

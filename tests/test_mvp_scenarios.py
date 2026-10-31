@@ -85,7 +85,7 @@ with sync_playwright() as playwright:
     # Demo bill is available only for an empty draft and adapts to the selected currency.
     context, page = new_page(browser, url)
     check("demo: offered on an empty draft", page.is_visible("#demoCallout"), True)
-    page.select_option("#currencySelect", "JPY")
+    page.select_option("#currencySelect", "AMD")
     page.click("#loadDemoBtn")
     check("demo: adds participants", page.locator("#peopleList .chip-name").all_inner_texts(),
           ["Анна", "Борис", "Вера"])
@@ -97,9 +97,9 @@ with sync_playwright() as playwright:
           page.locator("#itemsList .item").nth(1)
               .locator(".person-toggle[aria-pressed='true']").all_inner_texts(),
           ["Борис", "Вера"])
-    check("demo: preserves selected currency", page.input_value("#currencySelect"), "JPY")
-    check("demo: uses selected currency precision", page.inner_text("#itemSubtotal"), "2 300 ¥")
-    check("demo: calculates sample bill", page.inner_text("#grandTotal"), "2 623 ¥")
+    check("demo: preserves selected currency", page.input_value("#currencySelect"), "AMD")
+    check("demo: uses selected currency precision", page.inner_text("#itemSubtotal"), "2 300 ֏")
+    check("demo: calculates sample bill", page.inner_text("#grandTotal"), "2 623 ֏")
     check("demo: demonstrates percentage settings",
           [page.input_value("#discountInput"), page.input_value("#taxInput"), page.input_value("#tipInput")],
           ["5", "10", "10"])

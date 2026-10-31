@@ -11,12 +11,17 @@
     RUB: { symbol: '₽', digits: 2 },
     USD: { symbol: '$', digits: 2 },
     EUR: { symbol: '€', digits: 2 },
-    GBP: { symbol: '£', digits: 2 },
-    KZT: { symbol: '₸', digits: 2 },
-    AMD: { symbol: '֏', digits: 2 },
+    AMD: { symbol: '֏', digits: 0 },
     GEL: { symbol: '₾', digits: 2 },
-    JPY: { symbol: '¥', digits: 0 }
+    KZT: { symbol: '₸', digits: 0 }
   };
+  const LEGACY_CURRENCY_DIGITS = { GBP: 2, JPY: 0 };
+
+  function currencyDigits(code) {
+    if (CURRENCIES[code]) return CURRENCIES[code].digits;
+    if (Object.prototype.hasOwnProperty.call(LEGACY_CURRENCY_DIGITS, code)) return LEGACY_CURRENCY_DIGITS[code];
+    return 2;
+  }
 
   function num(value, fallback) {
     const n = typeof value === 'number' ? value : Number(value);
@@ -95,8 +100,8 @@
   }
 
   function convertCurrencyAmounts(state, oldCurrency, newCurrency) {
-    const oldDigits = CURRENCIES[oldCurrency] ? CURRENCIES[oldCurrency].digits : 2;
-    const newDigits = CURRENCIES[newCurrency] ? CURRENCIES[newCurrency].digits : 2;
+    const oldDigits = currencyDigits(oldCurrency);
+    const newDigits = currencyDigits(newCurrency);
     if (oldDigits === newDigits) return;
     const factor = 10 ** (newDigits - oldDigits);
     for (const item of state.items) {
