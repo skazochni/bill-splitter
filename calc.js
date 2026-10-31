@@ -93,6 +93,42 @@
     return shares;
   }
 
+  function gcdBigInt(a, b) {
+    a = a < 0n ? -a : a;
+    b = b < 0n ? -b : b;
+    while (b !== 0n) {
+      const t = a % b;
+      a = b;
+      b = t;
+    }
+    return a === 0n ? 1n : a;
+  }
+
+  function largestRemainderDistribution(total, numerators, denom) {
+    const n = numerators.length;
+    if (n === 0) return [];
+    const totalNum = typeof total === 'bigint' ? total : BigInt(total);
+    const floors = numerators.map((num) => Number(num / denom));
+    const remainders = numerators.map((num) => num % denom);
+    let sumFloor = floors.reduce((a, b) => a + b, 0);
+    let R = Number(totalNum) - sumFloor;
+    const order = remainders
+      .map((r, i) => ({ i, r }))
+      .sort((a, b) => (b.r > a.r ? 1 : (b.r < a.r ? -1 : a.i - b.i)));
+    const result = floors.slice();
+    for (let k = 0; k < R && k < order.length; k += 1) {
+      result[order[k].i] += 1;
+    }
+    // If R larger than positive remainders (shouldn't happen), distribute by order cyclically.
+    let idx = 0;
+    while (R > order.length) {
+      result[order[idx % order.length].i] += 1;
+      idx += 1;
+      R -= 1;
+    }
+    return result;
+  }
+
   function isItemExcluded(item) {
     // Позиция исключена из расчёта, если у неё нет участников.
     // Нулевая сумма — отдельный случай невалидности, а не «исключение».
@@ -195,8 +231,11 @@
         ? (state.tipMode === 'amount' ? (state.tipAmount || 0) : Math.round(total * (state.tipPct || 0) / 100))
         : 0;
       const grandTotal = total + tip;
-      const shares = splitAmount(total, people.length);
-      const tipShares = splitAmount(tip, people.length);
+      const eqNumerators = people.map(() => BigInt(total));
+      const eqDenom = BigInt(people.length || 1);
+      const shares = largestRemainderDistribution(BigInt(total), eqNumerators, eqDenom);
+      const tipNumerators = people.map(() => BigInt(tip));
+      const tipShares = largestRemainderDistribution(BigInt(tip), tipNumerators, eqDenom);
       people.forEach((p, i) => {
         const s = stats.get(p.id);
         s.subtotal = shares[i] || 0;
@@ -211,8 +250,6 @@
     const included = [];
     for (const item of state.items) {
       if (item.amount <= 0) continue;
-      // Resolve participants in global people order, not sharedBy order,
-      // so remainder cents are distributed deterministically.
       const participants = people.filter((p) => item.sharedBy.includes(p.id));
       if (participants.length) included.push({ item, participants });
     }
@@ -226,20 +263,45 @@
     const taxParts = allocateProportionally(tax, netAmounts);
     const tipParts = allocateProportionally(tip, netAmounts);
 
+    // Точные доли участников по всем позициям (рациональные).
+    // Общий знаменатель D = НОК количеств участников по позициям.
+    let D = 1n;
+    for (const entry of included) {
+      const n = BigInt(entry.participants.length);
+      D = (D * n) / gcdBigInt(D, n);
+    }
+    const numerators = people.map(() => 0n);
+    for (const entry of included) {
+      const n = BigInt(entry.participants.length);
+      const factor = D / n;
+      for (const p of entry.participants) {
+        const idx = people.findIndex((x) => x.id === p.id);
+        numerators[idx] += BigInt(entry.item.amount) * factor;
+      }
+    }
+
+    // Распределение каждой компоненты методом наибольших остатков.
+    const subtotalShares = largestRemainderDistribution(BigInt(subtotal), numerators, D);
+    const discountShares = (subtotal > 0)
+      ? largestRemainderDistribution(BigInt(discount), numerators.map((x) => BigInt(discount) * x), D * BigInt(subtotal))
+      : people.map(() => 0);
+    const taxShares = (subtotal > 0)
+      ? largestRemainderDistribution(BigInt(tax), numerators.map((x) => BigInt(tax) * x), D * BigInt(subtotal))
+      : people.map(() => 0);
+    const tipShares = (subtotal > 0)
+      ? largestRemainderDistribution(BigInt(tip), numerators.map((x) => BigInt(tip) * x), D * BigInt(subtotal))
+      : people.map(() => 0);
+
+    people.forEach((p, i) => {
+      const s = stats.get(p.id);
+      s.subtotal = subtotalShares[i] || 0;
+      s.discount = discountShares[i] || 0;
+      s.tax = taxShares[i] || 0;
+      s.tip = tipShares[i] || 0;
+    });
+
     included.forEach((entry, index) => {
       const item = entry.item;
-      const participants = entry.participants;
-      const amountShares = splitAmount(item.amount, participants.length);
-      const discountShares = splitAmount(discountParts[index], participants.length);
-      const taxShares = splitAmount(taxParts[index], participants.length);
-      const tipShares = splitAmount(tipParts[index], participants.length);
-      participants.forEach((p, i) => {
-        const s = stats.get(p.id);
-        s.subtotal += amountShares[i];
-        s.discount += discountShares[i];
-        s.tax += taxShares[i];
-        s.tip += tipShares[i];
-      });
       if (item.payerId && stats.has(item.payerId)) {
         stats.get(item.payerId).paid += netAmounts[index] + taxParts[index] + tipParts[index];
       }

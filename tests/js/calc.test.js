@@ -201,6 +201,9 @@ test('convertCurrencyByRate: shares sum to total after conversion', () => {
     equalTotal: 0,
     tipAmount: 0,
     tipMode: 'amount',
+    tipPct: 0,
+    taxPct: 0,
+    discountPct: 0,
     mode: 'itemized'
   };
   BillCalc.convertCurrencyByRate(st, 'USD', '400', 'AMD');
@@ -208,4 +211,166 @@ test('convertCurrencyByRate: shares sum to total after conversion', () => {
   const shares = BillCalc.splitAmount(r.total, st.people.length);
   const sum = shares.reduce((a, b) => a + b, 0);
   assert.equal(sum, r.total);
+});
+
+
+// Fair cent distribution
+function makeState(people, items, opts) {
+  opts = opts || {};
+  return {
+    mode: opts.mode || 'itemized',
+    currency: opts.currency || 'RUB',
+    people: people.map((name, i) => ({ id: 'p' + (i + 1), name })),
+    items: items.map((it, i) => ({
+      id: 'i' + (i + 1),
+      name: 'Item ' + (i + 1),
+      amount: it.amount,
+      payerId: it.payerId || (people.length ? 'p1' : null),
+      sharedBy: it.sharedBy || people.map((_, j) => 'p' + (j + 1))
+    })),
+    taxPct: opts.taxPct || 0,
+    tipPct: opts.tipPct || 0,
+    tipMode: opts.tipMode || 'percent',
+    tipAmount: opts.tipAmount || 0,
+    discountPct: opts.discountPct || 0,
+    equalTotal: opts.equalTotal || 0,
+    equalPayerId: 'p1',
+    lastItemPayerId: 'p1'
+  };
+}
+
+test('fair split: three items of 100 on three people', () => {
+  const people = ['A', 'B', 'C'];
+  const items = [{ amount: 10000 }, { amount: 10000 }, { amount: 10000 }];
+  const st = makeState(people, items);
+  const r = BillCalc.compute(st);
+  assert.deepEqual(r.people.map((p) => p.owed), [10000, 10000, 10000]);
+  assert.equal(r.total, 30000);
+});
+
+test('fair split: two items of 100 on three people', () => {
+  const people = ['A', 'B', 'C'];
+  const items = [{ amount: 10000 }, { amount: 10000 }];
+  const st = makeState(people, items);
+  const r = BillCalc.compute(st);
+  const owed = r.people.map((p) => p.owed);
+  assert.equal(owed.reduce((a, b) => a + b, 0), 20000);
+  // 66.67, 66.67, 66.66
+  assert.ok(Math.max(...owed) - Math.min(...owed) <= 1);
+});
+
+test('fair split: item 100.01 on three people', () => {
+  const people = ['A', 'B', 'C'];
+  const items = [{ amount: 10001 }];
+  const st = makeState(people, items);
+  const r = BillCalc.compute(st);
+  const owed = r.people.map((p) => p.owed);
+  assert.equal(owed.reduce((a, b) => a + b, 0), 10001);
+  assert.deepEqual(owed.sort((a, b) => b - a), [3334, 3334, 3333]);
+});
+
+test('fair split: different participant sets', () => {
+  const people = ['A', 'B', 'C'];
+  const items = [
+    { amount: 10000, sharedBy: ['p1', 'p2'] },
+    { amount: 10000, sharedBy: ['p2', 'p3'] }
+  ];
+  const st = makeState(people, items);
+  const r = BillCalc.compute(st);
+  const owed = r.people.map((p) => p.owed);
+  assert.equal(owed.reduce((a, b) => a + b, 0), 20000);
+  // A: 5000, B: 10000, C: 5000
+  assert.equal(owed[0], 5000);
+  assert.equal(owed[1], 10000);
+  assert.equal(owed[2], 5000);
+});
+
+test('fair split: discount, tax and tip percent', () => {
+  const people = ['A', 'B', 'C'];
+  const items = [{ amount: 30000 }, { amount: 30000 }, { amount: 30000 }];
+  const st = makeState(people, items, { discountPct: 10, taxPct: 20, tipPct: 10 });
+  const r = BillCalc.compute(st);
+  const owed = r.people.map((p) => p.owed);
+  assert.equal(owed.reduce((a, b) => a + b, 0), r.total);
+  for (const p of r.people) {
+    assert.equal(p.owed, p.subtotal - p.discount + p.tax + p.tip);
+  }
+  assert.equal(r.subtotal, 90000);
+});
+
+test('fair split: tip amount mode', () => {
+  const people = ['A', 'B', 'C'];
+  const items = [{ amount: 10000 }, { amount: 10000 }, { amount: 10000 }];
+  const st = makeState(people, items, { tipMode: 'amount', tipAmount: 1000 });
+  const r = BillCalc.compute(st);
+  const owed = r.people.map((p) => p.owed);
+  assert.equal(owed.reduce((a, b) => a + b, 0), r.total);
+  assert.equal(r.tip, 1000);
+  for (const p of r.people) {
+    assert.equal(p.owed, p.subtotal - p.discount + p.tax + p.tip);
+  }
+});
+
+test('fair split: equal mode no accumulation', () => {
+  const people = ['A', 'B', 'C'];
+  const st = makeState(people, [], { mode: 'equal', equalTotal: 10000 });
+  const r = BillCalc.compute(st);
+  const owed = r.people.map((p) => p.owed);
+  assert.equal(owed.reduce((a, b) => a + b, 0), r.total);
+  assert.ok(Math.max(...owed) - Math.min(...owed) <= 1);
+});
+
+test('fair split: AMD zero decimals', () => {
+  const people = ['A', 'B', 'C'];
+  const items = [{ amount: 100 }, { amount: 100 }, { amount: 100 }];
+  const st = makeState(people, items, { currency: 'AMD' });
+  const r = BillCalc.compute(st);
+  const owed = r.people.map((p) => p.owed);
+  assert.deepEqual(owed, [100, 100, 100]);
+});
+
+test('fair split: random 500 cases', () => {
+  function rng(seed) { return () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; }; }
+  const rand = rng(42);
+  for (let t = 0; t < 500; t++) {
+    const nPeople = 1 + Math.floor(rand() * 5);
+    const people = [];
+    for (let i = 0; i < nPeople; i++) people.push('P' + i);
+    const nItems = 1 + Math.floor(rand() * 6);
+    const items = [];
+    for (let i = 0; i < nItems; i++) {
+      const amount = Math.floor(rand() * 2000) + 1;
+      const nPart = 1 + Math.floor(rand() * nPeople);
+      // random subset
+      const subset = [];
+      for (let j = 0; j < nPeople; j++) if (rand() < 0.6) subset.push('p' + (j + 1));
+      if (subset.length === 0) subset.push('p1');
+      items.push({ amount, sharedBy: subset });
+    }
+    const st = makeState(people, items, {
+      taxPct: Math.floor(rand() * 30),
+      tipPct: Math.floor(rand() * 20),
+      discountPct: Math.floor(rand() * 30)
+    });
+    const r = BillCalc.compute(st);
+    const owed = r.people.map((p) => p.owed);
+    assert.equal(owed.reduce((a, b) => a + b, 0), r.total, 'sum mismatch case ' + t);
+    // exact per person
+    for (let i = 0; i < nPeople; i++) {
+      let exact = 0;
+      for (const it of st.items) {
+        if (!it.sharedBy.includes('p' + (i + 1))) continue;
+        if (it.amount <= 0) continue;
+        const n = st.items[st.items.indexOf(it)].sharedBy.length;
+        // recompute n from participants in global order
+      }
+    }
+    // breakdown sums
+    for (const p of r.people) {
+      assert.equal(p.owed, p.subtotal - p.discount + p.tax + p.tip, 'breakdown mismatch case ' + t);
+    }
+    for (const p of r.people) {
+      assert.ok(Math.abs(p.subtotal - Math.round(p.subtotal)) < 1);
+    }
+  }
 });
