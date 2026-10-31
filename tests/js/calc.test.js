@@ -122,3 +122,90 @@ test('convertCurrencyAmounts: same precision no-op', () => {
   BillCalc.convertCurrencyAmounts(st, 'RUB', 'USD');
   assert.equal(JSON.stringify(st), before);
 });
+
+
+// Manual currency conversion by rate
+test('convertCurrencyByRate: USD (2) -> AMD (0)', () => {
+  const st = {
+    currency: 'AMD',
+    items: [{ id: 'i1', name: 'X', amount: 1000, payerId: 'p1', sharedBy: ['p1'] }],
+    equalTotal: 2000,
+    tipAmount: 500,
+    tipMode: 'amount'
+  };
+  BillCalc.convertCurrencyByRate(st, 'USD', '400', 'AMD');
+  assert.equal(st.currency, 'AMD');
+  assert.equal(st.items[0].amount, 4000);
+  assert.equal(st.equalTotal, 8000);
+  assert.equal(st.tipAmount, 2000);
+});
+
+test('convertCurrencyByRate: AMD (0) -> USD (2)', () => {
+  const st = {
+    currency: 'USD',
+    items: [{ id: 'i1', name: 'X', amount: 4000, payerId: 'p1', sharedBy: ['p1'] }],
+    equalTotal: 8000,
+    tipAmount: 2000,
+    tipMode: 'amount'
+  };
+  BillCalc.convertCurrencyByRate(st, 'AMD', '0.0025', 'USD');
+  assert.equal(st.currency, 'USD');
+  assert.equal(st.items[0].amount, 1000);
+  assert.equal(st.equalTotal, 2000);
+  assert.equal(st.tipAmount, 500);
+});
+
+test('convertCurrencyByRate: small amounts round half up', () => {
+  const st = {
+    currency: 'AMD',
+    items: [{ id: 'i1', name: 'X', amount: 1, payerId: 'p1', sharedBy: ['p1'] }],
+    equalTotal: 0,
+    tipAmount: 0,
+    tipMode: 'amount'
+  };
+  BillCalc.convertCurrencyByRate(st, 'USD', '92.5', 'AMD');
+  assert.equal(st.items[0].amount, 1); // 0.01 USD * 92.5 = 0.925 -> 1
+});
+
+test('convertCurrencyByRate: large amounts no overflow', () => {
+  const st = {
+    currency: 'AMD',
+    items: [{ id: 'i1', name: 'X', amount: 1000000000, payerId: 'p1', sharedBy: ['p1'] }],
+    equalTotal: 2000000000,
+    tipAmount: 0,
+    tipMode: 'amount'
+  };
+  BillCalc.convertCurrencyByRate(st, 'USD', '92.123456', 'AMD');
+  assert.ok(Number.isFinite(st.items[0].amount));
+  assert.ok(Number.isFinite(st.equalTotal));
+});
+
+test('convertCurrencyByRate: rate with 6 decimals', () => {
+  const st = {
+    currency: 'RUB',
+    items: [{ id: 'i1', name: 'X', amount: 1000, payerId: 'p1', sharedBy: ['p1'] }],
+    equalTotal: 0,
+    tipAmount: 0,
+    tipMode: 'amount'
+  };
+  BillCalc.convertCurrencyByRate(st, 'USD', '92.123456', 'RUB');
+  // 10.00 USD * 92.123456 = 921.23456 RUB -> 92123 cents? RUB 2 digits => 92123.456 -> 92123
+  assert.equal(st.items[0].amount, 92123);
+});
+
+test('convertCurrencyByRate: shares sum to total after conversion', () => {
+  const st = {
+    currency: 'AMD',
+    people: [{ id: 'p1', name: 'A' }, { id: 'p2', name: 'B' }],
+    items: [{ id: 'i1', name: 'X', amount: 1000, payerId: 'p1', sharedBy: ['p1', 'p2'] }],
+    equalTotal: 0,
+    tipAmount: 0,
+    tipMode: 'amount',
+    mode: 'itemized'
+  };
+  BillCalc.convertCurrencyByRate(st, 'USD', '400', 'AMD');
+  const r = BillCalc.compute(st);
+  const shares = BillCalc.splitAmount(r.total, st.people.length);
+  const sum = shares.reduce((a, b) => a + b, 0);
+  assert.equal(sum, r.total);
+});

@@ -31,6 +31,7 @@
       </div>
     </div>
     <div class="header-actions">
+      <div class="currency-block">
       <label class="currency-box" for="currencySelect">
         <span>Валюта</span>
         <select id="currencySelect" aria-describedby="currencyNote">
@@ -43,6 +44,8 @@
         </select>
         <small class="currency-note" id="currencyNote">Курс не применяется при смене валюты</small>
       </label>
+      <button class="btn btn-ghost btn-compact" type="button" id="convertCurrencyBtn">Пересчитать по курсу</button>
+      </div>
       <div class="header-buttons">
         <button class="btn btn-ghost" type="button" id="historyBtn">История · <span id="historyCount">0</span></button>
         <button class="btn btn-ghost" type="button" id="resetBtn">Сбросить</button>
@@ -90,7 +93,7 @@
       <button class="btn btn-ghost" type="button" id="aboutClose">Закрыть</button>
     </div>
     <div class="about-body">
-      <p>Приложение помогает разделить счёт: по позициям или поровну, со скидкой, налогом и чаевыми, в нескольких валютах. Работает без интернета.</p>
+      <p>Приложение помогает разделить счёт: по позициям или поровну, со скидкой, налогом и чаевыми, в нескольких валютах; суммы можно пересчитать по курсу вручную. Работает без интернета.</p>
       <p>Данные хранятся только на вашем устройстве (в браузере), сетевых запросов с данными нет.</p>
       <h3>Установка</h3>
       <ul class="about-list">
@@ -101,6 +104,35 @@
         <li><strong>Другие браузеры:</strong> меню → «Добавить на главный экран».</li>
         <li><strong>iPhone (Safari):</strong> «Поделиться» → «На экран «Домой»».</li>
       </ul>
+    </div>
+  </dialog>
+
+  <dialog class="history-dialog about-dialog" id="convertCurrencyDialog" aria-labelledby="convertCurrencyTitle">
+    <div class="panel-head history-dialog-head">
+      <div>
+        <h2 id="convertCurrencyTitle">Пересчёт по курсу</h2>
+        <p class="panel-sub">Суммы будут пересчитаны вручную</p>
+      </div>
+      <button class="btn btn-ghost" type="button" id="convertCurrencyClose">Закрыть</button>
+    </div>
+    <div class="convert-currency-body">
+      <label class="convert-field">
+        <span>Из валюты</span>
+        <select id="convertFromCurrency"></select>
+      </label>
+      <label class="convert-field">
+        <span>Курс</span>
+        <div class="convert-rate-row">
+          <span class="convert-rate-label" id="convertRateLabel">1 ₽ =</span>
+          <input id="convertRateInput" type="text" inputmode="decimal" placeholder="0" aria-describedby="convertRateError">
+          <span class="convert-rate-symbol" id="convertRateSymbol">₽</span>
+        </div>
+        <small class="form-error" id="convertRateError" hidden></small>
+      </label>
+      <div class="convert-actions">
+        <button class="btn btn-primary" type="button" id="convertCurrencySubmit">Пересчитать</button>
+        <button class="btn btn-ghost" type="button" id="convertCurrencyCancel">Отмена</button>
+      </div>
     </div>
   </dialog>
 

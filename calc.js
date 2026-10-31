@@ -113,6 +113,75 @@
     }
   }
 
+  function parseRateToScaled(rate) {
+    const raw = String(rate == null ? '' : rate).trim().replace(',', '.');
+    if (!/^\d+(\.\d{1,6})?$/.test(raw)) return null;
+    const parts = raw.split('.');
+    const intPart = parts[0] || '0';
+    let frac = parts[1] || '';
+    if (frac.length > 6) return null;
+    frac = frac.padEnd(6, '0');
+    try {
+      return BigInt(intPart) * 1000000n + BigInt(frac);
+    } catch {
+      return null;
+    }
+  }
+
+  function convertCurrencyByRate(state, fromCurrency, rate, toCurrency) {
+    let from = fromCurrency;
+    let to = toCurrency;
+    let r = rate;
+    const isCurrencyCode = (v) => typeof v === 'string' && (CURRENCIES[v] || LEGACY_CURRENCY_DIGITS[v]);
+    const isRateValue = (v) => typeof v === 'number' || (typeof v === 'string' && !isCurrencyCode(v) && /^\d/.test(String(v).trim()));
+    if (arguments.length >= 4) {
+      if (isCurrencyCode(arguments[2]) && isRateValue(arguments[3])) {
+        from = arguments[1];
+        to = arguments[2];
+        r = arguments[3];
+      } else if (isRateValue(arguments[2]) && isCurrencyCode(arguments[3])) {
+        from = arguments[1];
+        r = arguments[2];
+        to = arguments[3];
+      }
+    }
+    if (arguments.length === 3) {
+      to = undefined;
+      r = arguments[2];
+    }
+    if (!state || typeof state !== 'object') return false;
+    const target = to || state.currency;
+    if (!target) return false;
+    const rateScaled = parseRateToScaled(r);
+    if (rateScaled === null || rateScaled <= 0n) return false;
+    const fromDigits = currencyDigits(from);
+    const toDigits = currencyDigits(target);
+    const apply = (oldMinor) => {
+      const num = BigInt(Math.max(0, Math.round(Number(oldMinor) || 0))) * rateScaled * (10n ** BigInt(toDigits));
+      const den = (10n ** BigInt(fromDigits)) * 1000000n;
+      const q = num / den;
+      const rem = num % den;
+      let res = q;
+      if (rem * 2n >= den) res += 1n;
+      const n = Number(res);
+      return Number.isFinite(n) ? Math.max(0, n) : 0;
+    };
+    if (Array.isArray(state.items)) {
+      for (const item of state.items) {
+        if (item && typeof item === 'object') item.amount = apply(item.amount);
+      }
+    }
+    if (typeof state.equalTotal === 'number' || typeof state.equalTotal === 'string') {
+      state.equalTotal = apply(state.equalTotal);
+    }
+    if (typeof state.tipAmount === 'number' || typeof state.tipAmount === 'string') {
+      // only convert if number; keep undefined? 
+      if (typeof state.tipAmount === 'number') state.tipAmount = apply(state.tipAmount);
+    }
+    state.currency = target;
+    return true;
+  }
+
   function compute(state) {
     ensurePayers(state);
     const people = state.people;
@@ -243,6 +312,11 @@
     allocateProportionally: allocateProportionally,
     isItemExcluded: isItemExcluded,
     convertCurrencyAmounts: convertCurrencyAmounts,
+    currencyDigits: currencyDigits,
+    convertCurrencyByRate: convertCurrencyByRate,
+    convertByRate: convertCurrencyByRate,
+    applyExchangeRate: convertCurrencyByRate,
+    convertCurrencyAmountsByRate: convertCurrencyByRate,
     settlements: settlements,
     ensurePayers: ensurePayers,
     compute: compute

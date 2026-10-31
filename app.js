@@ -157,7 +157,9 @@
   }
 
   let state = loadState();
+  let lastSelectedCurrency = state.currency;
   let historyRecords = loadHistory();
+  const CURRENCY_LABELS = { RUB: 'рубль', USD: 'доллар США', EUR: 'евро', AMD: 'драм', GEL: 'лари', KZT: 'тенге' };
   const $ = (id) => document.getElementById(id);
   const el = {
     currency: $('currencySelect'),
@@ -168,6 +170,16 @@
     aboutBtn: $('aboutBtn'),
     aboutDialog: $('aboutDialog'),
     aboutClose: $('aboutClose'),
+    convertCurrencyBtn: $('convertCurrencyBtn'),
+    convertCurrencyDialog: $('convertCurrencyDialog'),
+    convertCurrencyClose: $('convertCurrencyClose'),
+    convertFromCurrency: $('convertFromCurrency'),
+    convertRateInput: $('convertRateInput'),
+    convertRateError: $('convertRateError'),
+    convertRateLabel: $('convertRateLabel'),
+    convertRateSymbol: $('convertRateSymbol'),
+    convertCurrencySubmit: $('convertCurrencySubmit'),
+    convertCurrencyCancel: $('convertCurrencyCancel'),
     historyCount: $('historyCount'),
     historyDialog: $('historyDialog'),
     historyClose: $('historyClose'),
@@ -786,6 +798,12 @@
     if (!snapshot) return;
     clearUndo();
     hideUndoNotice();
+    if (snapshot.kind === 'currency') {
+      state = JSON.parse(JSON.stringify(snapshot.state));
+      saveNow();
+      renderAll();
+      return;
+    }
     if (snapshot.kind === 'item') {
       state.items.splice(Math.min(snapshot.index, state.items.length), 0, snapshot.item);
     } else {
@@ -1254,6 +1272,7 @@
   el.currency.addEventListener('change', () => {
     const nextCurrency = CURRENCIES[el.currency.value] ? el.currency.value : 'RUB';
     if (nextCurrency !== state.currency) {
+      lastSelectedCurrency = state.currency;
       BillCalc.convertCurrencyAmounts(state, state.currency, nextCurrency);
       state.currency = nextCurrency;
     }
@@ -1284,6 +1303,85 @@
   el.aboutBtn.addEventListener('click', () => { el.aboutDialog.showModal(); });
   el.aboutClose.addEventListener('click', () => el.aboutDialog.close());
   el.aboutDialog.addEventListener('close', () => { el.aboutBtn.focus(); });
+
+  function openConvertCurrencyDialog() {
+    const fromSelect = el.convertFromCurrency;
+    fromSelect.innerHTML = '';
+    for (const code of Object.keys(BillCalc.CURRENCIES)) {
+      const opt = document.createElement('option');
+      opt.value = code;
+      opt.textContent = BillCalc.CURRENCIES[code].symbol + ' — ' + (CURRENCY_LABELS[code] || code);
+      fromSelect.appendChild(opt);
+    }
+    let defaultFrom = lastSelectedCurrency;
+    if (!defaultFrom || defaultFrom === state.currency || !BillCalc.CURRENCIES[defaultFrom]) {
+      defaultFrom = Object.keys(BillCalc.CURRENCIES).find((c) => c !== state.currency) || state.currency;
+    }
+    fromSelect.value = defaultFrom;
+    updateConvertCurrencyLabels();
+    el.convertRateInput.value = '';
+    el.convertRateError.hidden = true;
+    el.convertRateError.textContent = '';
+    el.convertCurrencyDialog.showModal();
+  }
+  function updateConvertCurrencyLabels() {
+    const from = el.convertFromCurrency.value;
+    const fromSymbol = BillCalc.CURRENCIES[from] ? BillCalc.CURRENCIES[from].symbol : from;
+    const toSymbol = BillCalc.CURRENCIES[state.currency] ? BillCalc.CURRENCIES[state.currency].symbol : state.currency;
+    el.convertRateLabel.textContent = '1 ' + fromSymbol + ' =';
+    el.convertRateSymbol.textContent = toSymbol;
+  }
+  el.convertCurrencyBtn.addEventListener('click', openConvertCurrencyDialog);
+  el.convertFromCurrency.addEventListener('change', updateConvertCurrencyLabels);
+  el.convertCurrencyClose.addEventListener('click', () => el.convertCurrencyDialog.close());
+  el.convertCurrencyCancel.addEventListener('click', () => el.convertCurrencyDialog.close());
+  el.convertCurrencyDialog.addEventListener('close', () => { el.convertCurrencyBtn.focus(); });
+
+  function validateConvertRate(value) {
+    const raw = String(value || '').trim();
+    const normalized = raw.replace(',', '.');
+    if (!/^\d+(\.\d{1,6})?$/.test(normalized)) return null;
+    const n = Number(normalized);
+    if (!Number.isFinite(n) || n <= 0 || n > 1000000) return null;
+    return normalized;
+  }
+  el.convertCurrencySubmit.addEventListener('click', () => {
+    const from = el.convertFromCurrency.value;
+    const to = state.currency;
+    const normalized = validateConvertRate(el.convertRateInput.value);
+    if (!normalized) {
+      el.convertRateError.textContent = 'Введите курс больше 0, до 6 знаков после запятой';
+      el.convertRateError.hidden = false;
+      el.convertRateInput.focus();
+      return;
+    }
+    if (from === to) {
+      el.convertRateError.textContent = 'Выберите другую валюту';
+      el.convertRateError.hidden = false;
+      el.convertRateInput.focus();
+      return;
+    }
+    el.convertRateError.hidden = true;
+    const snapshot = JSON.parse(JSON.stringify(state));
+    BillCalc.convertCurrencyByRate(state, from, normalized, to);
+    lastSelectedCurrency = from;
+    const fromSymbol = BillCalc.CURRENCIES[from].symbol;
+    const toSymbol = BillCalc.CURRENCIES[to].symbol;
+    const rateText = normalized.replace('.', ',');
+    // trim? keep as is maybe
+    clearUndo();
+    undoSnapshot = { kind: 'currency', state: snapshot };
+    const p = el.itemUndo.querySelector('p');
+    if (p) p.textContent = 'Пересчитано: 1 ' + fromSymbol + ' = ' + rateText + ' ' + toSymbol + '. Отменить';
+    el.itemUndo.hidden = false;
+    el.personUndo.hidden = true;
+    if (undoTimer) clearTimeout(undoTimer);
+    undoTimer = setTimeout(() => { undoSnapshot = null; el.itemUndo.hidden = true; }, UNDO_TIMEOUT_MS);
+    el.convertCurrencyDialog.close();
+    saveNow();
+    renderAll();
+    if (el.tipModeAmountBtn) el.tipModeAmountBtn.textContent = (BillCalc.CURRENCIES[state.currency] || {}).symbol || state.currency;
+  });
   el.historyDialog.addEventListener('close', () => {
     el.historyName.value = '';
     el.historyError.hidden = true;
