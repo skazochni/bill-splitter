@@ -712,5 +712,440 @@
       "total": 1001,
       "excludedCount": 0
     }
+  },
+  "itemized_tip_percent": {
+    "input": {
+      "version": 1,
+      "mode": "itemized",
+      "currency": "RUB",
+      "people": [
+        {
+          "id": "p1",
+          "name": "Анна"
+        },
+        {
+          "id": "p2",
+          "name": "Борис"
+        }
+      ],
+      "items": [
+        {
+          "id": "i1",
+          "name": "Пицца",
+          "amount": 100000,
+          "payerId": "p1",
+          "sharedBy": [
+            "p1",
+            "p2"
+          ]
+        }
+      ],
+      "taxPct": 0,
+      "tipPct": 10,
+      "tipMode": "percent",
+      "tipAmount": 0,
+      "discountPct": 0,
+      "equalTotal": 0,
+      "equalPayerId": null,
+      "lastItemPayerId": "p1"
+    },
+    "result": {
+      "mode": "itemized",
+      "people": [
+        {
+          "id": "p1",
+          "name": "Анна",
+          "subtotal": 50000,
+          "discount": 0,
+          "tax": 0,
+          "tip": 5000,
+          "owed": 55000,
+          "paid": 110000,
+          "balance": 55000
+        },
+        {
+          "id": "p2",
+          "name": "Борис",
+          "subtotal": 50000,
+          "discount": 0,
+          "tax": 0,
+          "tip": 5000,
+          "owed": 55000,
+          "paid": 0,
+          "balance": -55000
+        }
+      ],
+      "subtotal": 100000,
+      "discount": 0,
+      "tax": 0,
+      "tip": 10000,
+      "total": 110000,
+      "excludedCount": 0
+    }
+  },
+  "itemized_tip_amount": {
+    "input": {
+      "version": 1,
+      "mode": "itemized",
+      "currency": "RUB",
+      "people": [
+        {
+          "id": "p1",
+          "name": "Анна"
+        },
+        {
+          "id": "p2",
+          "name": "Борис"
+        }
+      ],
+      "items": [
+        {
+          "id": "i1",
+          "name": "Пицца",
+          "amount": 100000,
+          "payerId": "p1",
+          "sharedBy": [
+            "p1",
+            "p2"
+          ]
+        }
+      ],
+      "taxPct": 0,
+      "tipPct": 0,
+      "tipMode": "amount",
+      "tipAmount": 5000,
+      "discountPct": 0,
+      "equalTotal": 0,
+      "equalPayerId": null,
+      "lastItemPayerId": "p1"
+    },
+    "result": {
+      "mode": "itemized",
+      "people": [
+        {
+          "id": "p1",
+          "name": "Анна",
+          "subtotal": 50000,
+          "discount": 0,
+          "tax": 0,
+          "tip": 2500,
+          "owed": 52500,
+          "paid": 105000,
+          "balance": 52500
+        },
+        {
+          "id": "p2",
+          "name": "Борис",
+          "subtotal": 50000,
+          "discount": 0,
+          "tax": 0,
+          "tip": 2500,
+          "owed": 52500,
+          "paid": 0,
+          "balance": -52500
+        }
+      ],
+      "subtotal": 100000,
+      "discount": 0,
+      "tax": 0,
+      "tip": 5000,
+      "total": 105000,
+      "excludedCount": 0
+    }
+  },
+  "itemized_tip_amount_remainder": {
+    "input": {
+      "version": 1,
+      "mode": "itemized",
+      "currency": "RUB",
+      "people": [
+        {
+          "id": "p1",
+          "name": "А"
+        },
+        {
+          "id": "p2",
+          "name": "Б"
+        },
+        {
+          "id": "p3",
+          "name": "В"
+        }
+      ],
+      "items": [
+        {
+          "id": "i1",
+          "name": "X",
+          "amount": 1000,
+          "payerId": "p1",
+          "sharedBy": [
+            "p1",
+            "p2",
+            "p3"
+          ]
+        }
+      ],
+      "taxPct": 0,
+      "tipPct": 0,
+      "tipMode": "amount",
+      "tipAmount": 10,
+      "discountPct": 0,
+      "equalTotal": 0,
+      "equalPayerId": null,
+      "lastItemPayerId": "p1"
+    },
+    "result": {
+      "mode": "itemized",
+      "people": [
+        {
+          "id": "p1",
+          "name": "А",
+          "subtotal": 334,
+          "discount": 0,
+          "tax": 0,
+          "tip": 4,
+          "owed": 338,
+          "paid": 1010,
+          "balance": 672
+        },
+        {
+          "id": "p2",
+          "name": "Б",
+          "subtotal": 333,
+          "discount": 0,
+          "tax": 0,
+          "tip": 3,
+          "owed": 336,
+          "paid": 0,
+          "balance": -336
+        },
+        {
+          "id": "p3",
+          "name": "В",
+          "subtotal": 333,
+          "discount": 0,
+          "tax": 0,
+          "tip": 3,
+          "owed": 336,
+          "paid": 0,
+          "balance": -336
+        }
+      ],
+      "subtotal": 1000,
+      "discount": 0,
+      "tax": 0,
+      "tip": 10,
+      "total": 1010,
+      "excludedCount": 0
+    }
+  },
+  "equal_tip_percent": {
+    "input": {
+      "version": 1,
+      "mode": "equal",
+      "currency": "RUB",
+      "people": [
+        {
+          "id": "p1",
+          "name": "Анна"
+        },
+        {
+          "id": "p2",
+          "name": "Борис"
+        }
+      ],
+      "items": [],
+      "taxPct": 0,
+      "tipPct": 10,
+      "tipMode": "percent",
+      "tipAmount": 0,
+      "discountPct": 0,
+      "equalTotal": 100000,
+      "equalPayerId": "p1",
+      "lastItemPayerId": "p1"
+    },
+    "result": {
+      "mode": "equal",
+      "people": [
+        {
+          "id": "p1",
+          "name": "Анна",
+          "subtotal": 50000,
+          "discount": 0,
+          "tax": 0,
+          "tip": 5000,
+          "owed": 55000,
+          "paid": 110000,
+          "balance": 55000
+        },
+        {
+          "id": "p2",
+          "name": "Борис",
+          "subtotal": 50000,
+          "discount": 0,
+          "tax": 0,
+          "tip": 5000,
+          "owed": 55000,
+          "paid": 0,
+          "balance": -55000
+        }
+      ],
+      "subtotal": 100000,
+      "tax": 0,
+      "tip": 10000,
+      "total": 110000,
+      "excludedCount": 0
+    }
+  },
+  "equal_tip_amount": {
+    "input": {
+      "version": 1,
+      "mode": "equal",
+      "currency": "RUB",
+      "people": [
+        {
+          "id": "p1",
+          "name": "Анна"
+        },
+        {
+          "id": "p2",
+          "name": "Борис"
+        }
+      ],
+      "items": [],
+      "taxPct": 0,
+      "tipPct": 0,
+      "tipMode": "amount",
+      "tipAmount": 5000,
+      "discountPct": 0,
+      "equalTotal": 100000,
+      "equalPayerId": "p1",
+      "lastItemPayerId": "p1"
+    },
+    "result": {
+      "mode": "equal",
+      "people": [
+        {
+          "id": "p1",
+          "name": "Анна",
+          "subtotal": 50000,
+          "discount": 0,
+          "tax": 0,
+          "tip": 2500,
+          "owed": 52500,
+          "paid": 105000,
+          "balance": 52500
+        },
+        {
+          "id": "p2",
+          "name": "Борис",
+          "subtotal": 50000,
+          "discount": 0,
+          "tax": 0,
+          "tip": 2500,
+          "owed": 52500,
+          "paid": 0,
+          "balance": -52500
+        }
+      ],
+      "subtotal": 100000,
+      "tax": 0,
+      "tip": 5000,
+      "total": 105000,
+      "excludedCount": 0
+    }
+  },
+  "equal_tip_jpy": {
+    "input": {
+      "version": 1,
+      "mode": "equal",
+      "currency": "JPY",
+      "people": [
+        {
+          "id": "p1",
+          "name": "Анна"
+        },
+        {
+          "id": "p2",
+          "name": "Борис"
+        }
+      ],
+      "items": [],
+      "taxPct": 0,
+      "tipPct": 0,
+      "tipMode": "amount",
+      "tipAmount": 100,
+      "discountPct": 0,
+      "equalTotal": 1000,
+      "equalPayerId": "p1",
+      "lastItemPayerId": "p1"
+    },
+    "result": {
+      "mode": "equal",
+      "people": [
+        {
+          "id": "p1",
+          "name": "Анна",
+          "subtotal": 500,
+          "discount": 0,
+          "tax": 0,
+          "tip": 50,
+          "owed": 550,
+          "paid": 1100,
+          "balance": 550
+        },
+        {
+          "id": "p2",
+          "name": "Борис",
+          "subtotal": 500,
+          "discount": 0,
+          "tax": 0,
+          "tip": 50,
+          "owed": 550,
+          "paid": 0,
+          "balance": -550
+        }
+      ],
+      "subtotal": 1000,
+      "tax": 0,
+      "tip": 100,
+      "total": 1100,
+      "excludedCount": 0
+    }
+  },
+  "tip_no_participants": {
+    "input": {
+      "version": 1,
+      "mode": "itemized",
+      "currency": "RUB",
+      "people": [],
+      "items": [
+        {
+          "id": "i1",
+          "name": "Пицца",
+          "amount": 50000,
+          "payerId": null,
+          "sharedBy": []
+        }
+      ],
+      "taxPct": 0,
+      "tipPct": 0,
+      "tipMode": "amount",
+      "tipAmount": 5000,
+      "discountPct": 0,
+      "equalTotal": 0,
+      "equalPayerId": null,
+      "lastItemPayerId": null
+    },
+    "result": {
+      "mode": "itemized",
+      "people": [],
+      "subtotal": 0,
+      "discount": 0,
+      "tax": 0,
+      "tip": 5000,
+      "total": 5000,
+      "excludedCount": 1
+    }
   }
 }
