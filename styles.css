@@ -119,7 +119,10 @@
   .logo svg { width: 24px; height: 24px; }
   h1 { font-size: 22px; letter-spacing: -.02em; line-height: 1.15; }
   .subtitle { margin-top: 2px; color: var(--muted); font-size: 13px; }
-  .header-actions { display: flex; align-items: center; justify-content: flex-end; gap: 10px; flex-wrap: wrap; width: 100%; }
+  .header-actions { display: flex; align-items: stretch; justify-content: flex-start; gap: 10px; flex-wrap: wrap; width: 100%; }
+  .currency-box { width: 100%; flex: 1 1 100%; }
+  .header-buttons { display: flex; align-items: stretch; gap: 8px; width: 100%; }
+  .header-buttons .btn { flex: 1 1 0; min-width: 0; white-space: nowrap; padding: 10px 8px; }
   .theme-switcher { position: absolute; top: 0; right: 0; }
   .theme-menu {
     position: absolute; right: 0; top: calc(100% + 6px); z-index: 20;
@@ -518,6 +521,15 @@
     .history-entry { align-items: flex-start; flex-wrap: wrap; }
     .history-entry-info, .history-entry-actions { width: 100%; }
     .history-entry-actions { justify-content: flex-end; }
+  }
+  @media (min-width: 768px) {
+    .app-header { flex-direction: row; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap; }
+    .header-top { width: auto; }
+    .header-actions { width: auto; justify-content: flex-end; align-items: center; flex-wrap: wrap; }
+    .currency-box { width: auto; flex: 0 0 auto; }
+    .header-buttons { width: auto; flex-wrap: nowrap; }
+    .header-buttons .btn { flex: 0 0 auto; padding: 10px 15px; }
+    .theme-switcher { position: static; }
   }
   @media (prefers-reduced-motion: reduce) {
     * { transition-duration: .01ms !important; animation-duration: .01ms !important; }
