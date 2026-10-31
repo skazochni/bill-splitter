@@ -121,6 +121,10 @@
         <select id="convertFromCurrency"></select>
       </label>
       <label class="convert-field">
+        <span>В валюту</span>
+        <select id="convertToCurrency"></select>
+      </label>
+      <label class="convert-field">
         <span>Курс</span>
         <div class="convert-rate-row">
           <span class="convert-rate-label" id="convertRateLabel">1 ₽ =</span>
@@ -128,6 +132,7 @@
           <span class="convert-rate-symbol" id="convertRateSymbol">₽</span>
         </div>
         <small class="form-error" id="convertRateError" hidden></small>
+        <small class="hint" id="convertCurrencyHint" hidden>Выберите разные валюты</small>
       </label>
       <div class="convert-actions">
         <button class="btn btn-primary" type="button" id="convertCurrencySubmit">Пересчитать</button>

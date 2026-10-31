@@ -174,6 +174,8 @@
     convertCurrencyDialog: $('convertCurrencyDialog'),
     convertCurrencyClose: $('convertCurrencyClose'),
     convertFromCurrency: $('convertFromCurrency'),
+    convertToCurrency: $('convertToCurrency'),
+    convertCurrencyHint: $('convertCurrencyHint'),
     convertRateInput: $('convertRateInput'),
     convertRateError: $('convertRateError'),
     convertRateLabel: $('convertRateLabel'),
@@ -1304,21 +1306,26 @@
   el.aboutClose.addEventListener('click', () => el.aboutDialog.close());
   el.aboutDialog.addEventListener('close', () => { el.aboutBtn.focus(); });
 
-  function openConvertCurrencyDialog() {
-    const fromSelect = el.convertFromCurrency;
-    fromSelect.innerHTML = '';
+  function populateCurrencySelect(select) {
+    select.innerHTML = '';
     for (const code of Object.keys(BillCalc.CURRENCIES)) {
       const opt = document.createElement('option');
       opt.value = code;
       opt.textContent = BillCalc.CURRENCIES[code].symbol + ' — ' + (CURRENCY_LABELS[code] || code);
-      fromSelect.appendChild(opt);
+      select.appendChild(opt);
     }
-    let defaultFrom = lastSelectedCurrency;
-    if (!defaultFrom || defaultFrom === state.currency || !BillCalc.CURRENCIES[defaultFrom]) {
-      defaultFrom = Object.keys(BillCalc.CURRENCIES).find((c) => c !== state.currency) || state.currency;
+  }
+  function openConvertCurrencyDialog() {
+    populateCurrencySelect(el.convertFromCurrency);
+    populateCurrencySelect(el.convertToCurrency);
+    el.convertFromCurrency.value = state.currency;
+    let defaultTo = 'RUB';
+    if (state.currency === 'RUB') {
+      defaultTo = (lastSelectedCurrency && lastSelectedCurrency !== 'RUB') ? lastSelectedCurrency : 'USD';
     }
-    fromSelect.value = defaultFrom;
+    el.convertToCurrency.value = defaultTo;
     updateConvertCurrencyLabels();
+    updateConvertCurrencyButtonState();
     el.convertRateInput.value = '';
     el.convertRateError.hidden = true;
     el.convertRateError.textContent = '';
@@ -1326,13 +1333,20 @@
   }
   function updateConvertCurrencyLabels() {
     const from = el.convertFromCurrency.value;
+    const to = el.convertToCurrency.value;
     const fromSymbol = BillCalc.CURRENCIES[from] ? BillCalc.CURRENCIES[from].symbol : from;
-    const toSymbol = BillCalc.CURRENCIES[state.currency] ? BillCalc.CURRENCIES[state.currency].symbol : state.currency;
+    const toSymbol = BillCalc.CURRENCIES[to] ? BillCalc.CURRENCIES[to].symbol : to;
     el.convertRateLabel.textContent = '1 ' + fromSymbol + ' =';
     el.convertRateSymbol.textContent = toSymbol;
   }
+  function updateConvertCurrencyButtonState() {
+    const same = el.convertFromCurrency.value === el.convertToCurrency.value;
+    el.convertCurrencySubmit.disabled = same;
+    el.convertCurrencyHint.hidden = !same;
+  }
   el.convertCurrencyBtn.addEventListener('click', openConvertCurrencyDialog);
-  el.convertFromCurrency.addEventListener('change', updateConvertCurrencyLabels);
+  el.convertFromCurrency.addEventListener('change', () => { updateConvertCurrencyLabels(); updateConvertCurrencyButtonState(); });
+  el.convertToCurrency.addEventListener('change', () => { updateConvertCurrencyLabels(); updateConvertCurrencyButtonState(); });
   el.convertCurrencyClose.addEventListener('click', () => el.convertCurrencyDialog.close());
   el.convertCurrencyCancel.addEventListener('click', () => el.convertCurrencyDialog.close());
   el.convertCurrencyDialog.addEventListener('close', () => { el.convertCurrencyBtn.focus(); });
@@ -1347,7 +1361,7 @@
   }
   el.convertCurrencySubmit.addEventListener('click', () => {
     const from = el.convertFromCurrency.value;
-    const to = state.currency;
+    const to = el.convertToCurrency.value;
     const normalized = validateConvertRate(el.convertRateInput.value);
     if (!normalized) {
       el.convertRateError.textContent = 'Введите курс больше 0, до 6 знаков после запятой';

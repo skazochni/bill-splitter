@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'bill-splitter-v7';
+const CACHE_VERSION = 'bill-splitter-v8';
 const PRECACHE = [
   './',
   './index.html',
