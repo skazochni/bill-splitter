@@ -1367,7 +1367,10 @@
     lastSelectedCurrency = from;
     const fromSymbol = BillCalc.CURRENCIES[from].symbol;
     const toSymbol = BillCalc.CURRENCIES[to].symbol;
-    const rateText = normalized.replace('.', ',');
+    const rateParts = normalized.split('.');
+    let rateFrac = rateParts[1] || '';
+    if (rateFrac.length < 2) rateFrac = rateFrac.padEnd(2, '0');
+    const rateText = rateParts[0] + ',' + rateFrac;
     // trim? keep as is maybe
     clearUndo();
     undoSnapshot = { kind: 'currency', state: snapshot };
